@@ -1,0 +1,43 @@
+﻿@page "/verify"
+@using System.Security.Claims
+@inject IForumApiClient ForumApiClient
+
+@attribute [Authorize]
+
+<h3>Forum Authentication Verification</h3>
+
+@if (@isAuthenticated)
+{
+    <text> The user is authenticated </text>
+    <br />
+    @ProfileModel.EmailAddress
+@*    @ForumGroupsModel.ForumGroups.FirstOrDefault()*@
+}
+else
+{
+    <text> The user is NOT authenticated </text>
+}
+
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    private bool isAuthenticated = false;
+
+    //[Parameter]
+    public ProfileModel ProfileModel { get; set; } = new ProfileModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationState;
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            isAuthenticated = true;
+            ProfileModel = await ForumApiClient.GetUserProfileViewAsync();
+        }
+    }
+
+}

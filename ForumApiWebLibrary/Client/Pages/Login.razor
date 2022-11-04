@@ -1,0 +1,84 @@
+﻿@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel
+@using ForumWasmAuthService.Authentication
+@using ForumWasmAuthService.Models
+@inject IForumAuthenticationService ForumAuthService 
+@inject NavigationManager NavManager
+
+@if (showAuthenticationError)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@authenticationErrorText</p>
+    </div>
+}
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>Login</h3>
+        <br />
+
+        <EditForm Context="NotAuthorized" Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <h5>Email Address</h5>
+                <InputText @bind-Value="@loginModel.Email"></InputText>
+                <ValidationMessage For="@(()=> loginModel.Email)" />
+    
+                <h5>Password</h5>
+                <InputText type="password" @bind-Value="@loginModel.Password"></InputText>
+                <ValidationMessage For="@(()=> loginModel.Password)" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+                @*<button disabled=@showAuthenticationError type="submit" class="btn btn-primary">Login</button>*@
+            </div>
+        </EditForm>
+    </NotAuthorized>
+    <Authorized>
+        <h3>Logout</h3>
+        <br />
+
+        <EditForm Context="Authorized" Model="@loginModel" OnSubmit="@HandleValidLogoutSubmit">
+
+            <div class="form-group">
+            <button type="submit" class="btn btn-outline-primary">Logout</button>
+            </div>
+        </EditForm>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    private LoginModel loginModel = new LoginModel();
+
+    private bool showAuthenticationError = false;
+    private string authenticationErrorText = string.Empty;
+
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await ForumAuthService.Login(loginModel);
+
+        loginModel.Password = string.Empty;
+
+        if (result is not null)
+        {
+            NavManager.NavigateTo("/verify");
+        }
+        else
+        {
+            showAuthenticationError = true;
+            authenticationErrorText = "Login failed to process successfully.  Please refresh your browswer and try again.";
+        }
+    }
+
+    private async Task HandleValidLogoutSubmit()
+    {
+        await ForumAuthService.Logout();
+        NavManager.NavigateTo("/login");
+        //NavManager.NavigateTo("/login", forceLoad: true);
+    }
+}

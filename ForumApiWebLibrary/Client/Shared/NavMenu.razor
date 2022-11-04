@@ -1,0 +1,74 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href=""> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Forum API</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <TelerikIcon Icon="home"></TelerikIcon> &nbsp;&nbsp; Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="products">
+                <TelerikIcon Icon="aggregate-fields"></TelerikIcon> &nbsp;&nbsp; Products
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="forums">
+                <TelerikIcon Icon="comment"></TelerikIcon> &nbsp;&nbsp; Forums
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="gallery">
+                <TelerikIcon Icon="photos"></TelerikIcon> &nbsp;&nbsp; Gallery
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="blog">
+                <TelerikIcon Icon="camera"></TelerikIcon> &nbsp;&nbsp; Blog
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="support">
+                <TelerikIcon Icon="info-circle"></TelerikIcon> &nbsp;&nbsp; Support
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="moderation">
+                <TelerikIcon Icon="comments-remove"></TelerikIcon> &nbsp;&nbsp; Moderation
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="login">
+                <TelerikIcon Icon="login"></TelerikIcon> &nbsp;&nbsp; Login
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="verify">
+                <TelerikIcon Icon="check-outline"></TelerikIcon> &nbsp;&nbsp; Verify
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    bool collapseNavMenu = true;
+
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+
+<style>
+    .navbar-brand {
+        text-align: center;
+    }
+
+</style>
