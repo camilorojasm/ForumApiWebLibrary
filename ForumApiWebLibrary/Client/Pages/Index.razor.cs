@@ -9,7 +9,7 @@ namespace ForumApiWebLibrary.Client.Pages
 
         void SayHelloHandler()
         {
-            string msg = string.Format("Hello from <strong>Telerik Blazor</strong> at {0}.<br /> Now you can use C# to write front-end!", DateTime.Now);
+            string msg = string.Format("Hello from <strong>Telerik Blazor</strong> at {0}.<br /> Forum API", DateTime.Now);
             helloString = new MarkupString(msg);
         }
 

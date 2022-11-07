@@ -3,7 +3,7 @@
 
 @attribute [Authorize]
 
-<TelerikListView Data=@ForumGroupsModel.SortedForumTypes
+<TelerikListView Data=@ForumGroupsModel.ForumGroupsSortedByDisplayOrder
                  Pageable="false">
 @*    <HeaderTemplate>
         Forum Groups
@@ -19,7 +19,7 @@
                             </HeaderTemplate>
                             <Template Context="forum_context">
                                 <div class="listview-item">
-                                    <p><a href="forum/@forum_context.FId/threads_activity">@forum_context.ForumTitle</a> -- @forum_context.ForumTitleBody</p>
+                                    <p><a href="topics/@forum_context.FId.ToString()">@forum_context.ForumTitle</a> -- @forum_context.ForumTitleBody</p>
                                 </div>
                             </Template>
                         </TelerikListView>

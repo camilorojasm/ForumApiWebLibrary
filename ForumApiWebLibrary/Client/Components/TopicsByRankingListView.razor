@@ -1,0 +1,38 @@
+﻿@inject IForumApiClient ForumApiClient
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+<TelerikListView Data="TopicsModel.TopicsSortedByRanking"
+                 OnModelInit="OnModelInitHandler"
+                 OnCreate="CreateHandler"
+                 OnDelete="DeleteHandler"
+                 OnUpdate="UpdateHandler"
+                 OnEdit="EditHandler"
+                 PageChanged="PageChangedHandler"
+                 Pageable="true"
+                 PageSize="PageSize"
+                 Class="topics-list-view">
+@*    <HeaderTemplate>
+        <h3>@TopicsModel.ForumTitle</h3> <br/>
+        <p> @TopicsModel.ForumTitleBody </p>
+    </HeaderTemplate>*@
+    <EditTemplate>
+        <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
+            Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />
+            Body  : &nbsp; <TelerikTextBox @bind-Value="@context.TopicBody" /><br />
+            <ListViewCommandButton Command="Save" Icon="save">Save</ListViewCommandButton>
+            <ListViewCommandButton Command="Cancel" Icon="cancel">Cancel</ListViewCommandButton>
+        </div>
+    </EditTemplate>
+    <Template Context="topic_context">
+        <div class="topics-listview-item">
+            @*<p><a href="forum/@forum_context.FId/threads_activity">@forum_context.ForumTitle</a> -- @forum_context.ForumTitleBody</p>*@
+            <p> Title : &nbsp; @topic_context.Title </p>
+            <p> Body  : &nbsp; @topic_context.TopicBody </p>
+            <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+        </div>
+    </Template>
+    <HeaderTemplate>
+        <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton>
+    </HeaderTemplate>
+</TelerikListView>

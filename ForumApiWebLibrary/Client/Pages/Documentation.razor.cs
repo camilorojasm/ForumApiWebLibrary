@@ -5,9 +5,8 @@ using System.Linq;
 
 namespace ForumApiWebLibrary.Client.Pages
 {
-    public partial class Forums : ComponentBase
+    public partial class Documentation : ComponentBase
     {
-        [CascadingParameter]
-        public long FId { get; set; }
+
     }
 }

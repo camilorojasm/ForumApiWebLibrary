@@ -34,7 +34,7 @@ namespace ForumApiWebLibrary.Client.Components
 
         void SelectItem(long itemId)
         {
-            ForumGroupModel currItem = ForumGroupsModel.SortedForumTypes.Where(itm => itm.ForumGroupId == itemId).FirstOrDefault();
+            ForumGroupModel currItem = ForumGroupsModel.ForumGroupsSortedByDisplayOrder.Where(itm => itm.ForumGroupId == itemId).FirstOrDefault();
             
             if (currItem != null)
             {

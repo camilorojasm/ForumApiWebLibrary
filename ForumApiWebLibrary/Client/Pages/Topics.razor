@@ -1,0 +1,44 @@
+﻿@page "/topics/{FId:long}"
+@using ForumApiWebLibrary.Client.Components
+@inject IForumApiClient ForumApiClient
+@*@inject NavigationManager NavigationManager*@
+@attribute [Authorize]
+
+@layout MainLayout
+
+<PageTitle>Topics Page</PageTitle>
+
+@*@ActiveTabIndex.ToString()*@
+
+<h4>@TopicsModel.ForumTitle</h4>
+<br />
+<p> @TopicsModel.ForumTitleBody </p>
+<br />
+
+<CascadingValue Value="@TopicsModel">
+    <CascadingValue Value="@PageSize">
+        <TelerikTabStrip ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@TabChangedHandler">
+            <TabStripTab Title="Active">
+                <TopicsByRankingListView />
+            </TabStripTab>
+            <TabStripTab Title="Recently Created">
+                <TopicsByRankingListView />
+            </TabStripTab>
+            <TabStripTab Title="Upvoted">
+                <TopicsByRankingListView />
+            </TabStripTab>
+        </TelerikTabStrip>
+    </CascadingValue>
+</CascadingValue>
+
+@*@code {
+    string result { get; set; }
+
+    void TabChangedHandler(int newIndex)
+    {
+        result = $"current tab {newIndex} selected on {DateTime.Now}";
+    }
+
+
+}
+*@
