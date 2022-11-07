@@ -13,35 +13,36 @@ namespace ForumApiWebLibrary.Client.Components
 {
     public partial class TopicsByRankingListView : ComponentBase
     {
-        //[CascadingParameter]
-        //public long FId { get; set; }
+        [CascadingParameter]
+        public long FId { get; set; }
 
-        //[CascadingParameter]
+        [CascadingParameter]
         public int ActiveTabIndex { get; set; }
 
-        [CascadingParameter]
-        public TopicsModel TopicsModel { get; set; }
+        //[CascadingParameter]
+        public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
-        [CascadingParameter]
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 10;
 
         //public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    //switch on ActiveTabIndex
-        //    //switch (ActiveTabIndex)
-        //    //{
-        //    //    case 0: TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(TopicsModel.FId, 1, PageSize);
-        //    //        break;
-        //    //    case 1: TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(TopicsModel.FId, 1, PageSize);
-        //    //        break;
-        //    //    case 2: TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(TopicsModel.FId, 1, PageSize);
-        //    //        break;
-        //    //}
+        protected override async Task OnInitializedAsync()
+        {
+            switch (ActiveTabIndex)
+            {
+                case 0:
+                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
+                    break;
+                case 1:
+                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
+                    break;
+                case 2:
+                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
+                    break;
+            }
 
-        //    //TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, 10);
-        //}
+            await base.OnInitializedAsync();
+        }
 
         async Task PageChangedHandler(int currPageIndex)
         {

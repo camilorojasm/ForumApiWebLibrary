@@ -14,33 +14,33 @@ namespace ForumApiWebLibrary.Client.Pages
         [Parameter]
         public long FId { get; set; }
 
-        public TopicsModel TopicsModel { get; set; } = new TopicsModel();
+        //public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
-        public int PageSize { get; set; } = 10;
+        //public int PageSize { get; set; } = 10;
 
         public int ActiveTabIndex { get; set; } = 0;
 
         protected override async Task OnInitializedAsync()
         {
-            TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
+            await base.OnInitializedAsync();
         }
 
         async Task TabChangedHandler(int newIndex)
         {
             ActiveTabIndex = newIndex;
 
-            switch (ActiveTabIndex)
-            {
-                case 0:
-                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
-                    break;
-                case 1:
-                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
-                    break;
-                case 2:
-                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
-                    break;
-            }
+            //switch (ActiveTabIndex)
+            //{
+            //    case 0:
+            //        TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
+            //        break;
+            //    case 1:
+            //        TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
+            //        break;
+            //    case 2:
+            //        TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
+            //        break;
+            //}
 
         }
     }
