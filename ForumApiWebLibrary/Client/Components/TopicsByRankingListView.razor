@@ -1,4 +1,7 @@
 ﻿@inject IForumApiClient ForumApiClient
+@using ForumWasmAuthService.Authentication
+@using ForumWasmAuthService.Models
+@inject IForumAuthenticationService ForumAuthService
 @inject NavigationManager NavigationManager
 @attribute [Authorize]
 
@@ -12,10 +15,9 @@
                  Pageable="true"
                  PageSize="PageSize"
                  Class="topics-list-view">
-@*    <HeaderTemplate>
-        <h3>@TopicsModel.ForumTitle</h3> <br/>
-        <p> @TopicsModel.ForumTitleBody </p>
-    </HeaderTemplate>*@
+    <HeaderTemplate>
+        <h3>TopicsModel.Title</h3>
+    </HeaderTemplate>
     <EditTemplate>
         <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
             Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Telerik.Blazor.Components;
@@ -55,6 +56,23 @@ namespace ForumApiWebLibrary.Client.Components
 
             //// perform actual data source operation here through your service
             //await MyService.Update(item);
+            var response = await ForumApiClient.PutTopicAsync(item);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.NoContent:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
 
             //// update the local view-model data with the service data
             //await GetListViewData();
@@ -81,6 +99,24 @@ namespace ForumApiWebLibrary.Client.Components
         {
             TopicModel item = (TopicModel)args.Item;
 
+            var response = await ForumApiClient.PostTopicAsync(item);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
+
             TopicsModel.TopicsList.Insert(0, item);
 
             // perform actual data source operation here through your service
@@ -103,7 +139,7 @@ namespace ForumApiWebLibrary.Client.Components
 
         public TopicModel OnModelInitHandler()
         {
-            return new TopicModel(0, String.Empty, String.Empty);
+            return new TopicModel(FId, String.Empty, String.Empty);
         }
 
     }
