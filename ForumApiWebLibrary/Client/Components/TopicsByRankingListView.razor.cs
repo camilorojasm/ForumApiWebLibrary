@@ -50,6 +50,13 @@ namespace ForumApiWebLibrary.Client.Components
             //result = $"The user is now on page {currPageIndex}";
         }
 
+        //public EventCallback<ListViewCommandEventArgs> OnClick { get; set; }
+        async Task ReplyHandler(ListViewCommandEventArgs args)
+        {
+            //result = $"The user is now on page {currPageIndex}";
+            NavigationManager.NavigateTo("/verify");
+        }
+
         async Task UpdateHandler(ListViewCommandEventArgs args)
         {
             TopicModel item = (TopicModel)args.Item;

@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace ForumApiWebLibrary.Client.Pages
 {
-    public partial class Forums : ComponentBase
+    public partial class Posts : ComponentBase
     {
+        [Parameter]
+        public long TId { get; set; }
+
     }
 }

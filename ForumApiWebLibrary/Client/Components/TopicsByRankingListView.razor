@@ -15,9 +15,6 @@
                  Pageable="true"
                  PageSize="PageSize"
                  Class="topics-list-view">
-    <HeaderTemplate>
-        <h3>TopicsModel.Title</h3>
-    </HeaderTemplate>
     <EditTemplate>
         <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
             Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />
@@ -27,14 +24,18 @@
         </div>
     </EditTemplate>
     <Template Context="topic_context">
-        <div class="topics-listview-item">
-            @*<p><a href="forum/@forum_context.FId/threads_activity">@forum_context.ForumTitle</a> -- @forum_context.ForumTitleBody</p>*@
-            <p> Title : &nbsp; @topic_context.Title </p>
-            <p> Body  : &nbsp; @topic_context.TopicBody </p>
-            <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+        <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
+                <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>
+@*                <p> Title : &nbsp; @topic_context.Title </p>
+                <p> Body  : &nbsp; @topic_context.TopicBody </p>*@
+                @*<p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>*@
+
+                <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+                <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
         </div>
     </Template>
     <HeaderTemplate>
-        <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton>
+        <h4>@TopicsModel.ForumTitle</h4> <br />
+        <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
     </HeaderTemplate>
 </TelerikListView>
