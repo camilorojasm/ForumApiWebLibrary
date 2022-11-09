@@ -9,6 +9,5 @@ namespace ForumApiWebLibrary.Client.Pages
     {
         [Parameter]
         public long TId { get; set; }
-
     }
 }

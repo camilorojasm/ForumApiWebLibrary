@@ -29,6 +29,13 @@ namespace ForumApiWebLibrary.Client.Components
 
         protected override async Task OnInitializedAsync()
         {
+            await FetchData();
+
+            await base.OnInitializedAsync();
+        }
+
+        private async Task FetchData()
+        {
             switch (ActiveTabIndex)
             {
                 case 0:
@@ -41,8 +48,6 @@ namespace ForumApiWebLibrary.Client.Components
                     TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
                     break;
             }
-
-            await base.OnInitializedAsync();
         }
 
         async Task PageChangedHandler(int currPageIndex)
@@ -124,13 +129,9 @@ namespace ForumApiWebLibrary.Client.Components
                     return;
             }
 
-            TopicsModel.TopicsList.Insert(0, item);
+            //TopicsModel.TopicsList.Insert(0, item);
 
-            // perform actual data source operation here through your service
-            //await MyService.Create(item);
-
-            //// update the local view-model data with the service data
-            //await GetListViewData();
+            await FetchData();
         }
 
         async Task EditHandler(ListViewCommandEventArgs e)
