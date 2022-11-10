@@ -1,7 +1,7 @@
 ﻿@page "/posts/{TId:long}"
 @using ForumApiWebLibrary.Client.Components
 @inject IForumApiClient ForumApiClient
-@*@inject NavigationManager NavigationManager*@
+
 @attribute [Authorize]
 
 @layout MainLayout
@@ -11,4 +11,3 @@
 <CascadingValue Value="TId">
     <PostsTreeView />
 </CascadingValue>
-

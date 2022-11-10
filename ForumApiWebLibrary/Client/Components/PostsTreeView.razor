@@ -94,7 +94,14 @@
                             Editable="false"
                             Expandable="true"
                             Resizable="true"
-                            Width="250px" />
+                            Width="250px" >
+                            <Template>>@{
+                                PostModel post = context as PostModel;
+                                <img src="@( $"apexsql_images.png" )" />
+                                <text>@post.ImageGuid</text>
+                            }
+                            </Template>
+            </TreeListColumn>
             <TreeListColumn Field="PostTitle"
                             Editable="true"
                             Expandable="false"
@@ -118,3 +125,4 @@
         </TreeListColumns>
     </TelerikTreeList>
 </TelerikStackLayout>
+

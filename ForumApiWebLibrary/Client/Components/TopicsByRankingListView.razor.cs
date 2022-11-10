@@ -20,12 +20,9 @@ namespace ForumApiWebLibrary.Client.Components
         [CascadingParameter]
         public int ActiveTabIndex { get; set; }
 
-        //[CascadingParameter]
         public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
         public int PageSize { get; set; } = 10;
-
-        //public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
         protected override async Task OnInitializedAsync()
         {
@@ -55,7 +52,6 @@ namespace ForumApiWebLibrary.Client.Components
             //result = $"The user is now on page {currPageIndex}";
         }
 
-        //public EventCallback<ListViewCommandEventArgs> OnClick { get; set; }
         async Task ReplyHandler(ListViewCommandEventArgs args)
         {
             //result = $"The user is now on page {currPageIndex}";
@@ -66,8 +62,6 @@ namespace ForumApiWebLibrary.Client.Components
         {
             TopicModel item = (TopicModel)args.Item;
 
-            //// perform actual data source operation here through your service
-            //await MyService.Update(item);
             var response = await ForumApiClient.PutTopicAsync(item);
 
             switch (response.StatusCode)
@@ -100,10 +94,6 @@ namespace ForumApiWebLibrary.Client.Components
         {
             TopicModel item = (TopicModel)args.Item;
 
-            // perform actual data source operation here through your service
-            //await MyService.Delete(item);
-
-            //// update the local view-model data with the service data
             //await GetListViewData();
         }
 
@@ -128,8 +118,6 @@ namespace ForumApiWebLibrary.Client.Components
                 default:
                     return;
             }
-
-            //TopicsModel.TopicsList.Insert(0, item);
 
             await FetchData();
         }
