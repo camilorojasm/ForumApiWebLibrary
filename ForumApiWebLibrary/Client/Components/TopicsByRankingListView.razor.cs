@@ -24,32 +24,58 @@ namespace ForumApiWebLibrary.Client.Components
 
         public int PageSize { get; set; } = 10;
 
-        protected override async Task OnInitializedAsync()
-        {
-            await FetchData();
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    await FetchData();
 
-            await base.OnInitializedAsync();
-        }
+        //    await base.OnInitializedAsync();
+        //}
 
-        private async Task FetchData()
+        //private async Task FetchData(int pageNumber, int pageSize)
+        //{
+        //    switch (ActiveTabIndex)
+        //    {
+        //        case 0:
+        //            TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
+        //            break;
+        //        case 1:
+        //            TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
+        //            break;
+        //        case 2:
+        //            TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
+        //            break;
+        //    }
+        //}
+
+        //async Task PageChangedHandler(ListViewCommandEventArgs args)
+        //{
+        //    //result = $"The user is now on page {currPageIndex}";
+        //    var x = "String";
+        //}
+        //async Task PageChangedHandler(int currPageIndex)
+        //{
+        //    //result = $"The user is now on page {currPageIndex}";
+        //}
+
+        async Task OnReadHandler(ListViewReadEventArgs args)
         {
             switch (ActiveTabIndex)
             {
                 case 0:
-                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, args.Request.Page, args.Request.PageSize);
                     break;
                 case 1:
-                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, args.Request.Page, args.Request.PageSize);
                     break;
                 case 2:
-                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, args.Request.Page, args.Request.PageSize);
                     break;
             }
-        }
 
-        async Task PageChangedHandler(int currPageIndex)
-        {
-            //result = $"The user is now on page {currPageIndex}";
+            args.Data = TopicsModel.TopicsSortedByRanking;
+            args.Total = TopicsModel.TotalRowCount;
+            //args.Data = await FetchData(args.Request.Page, args.Request.PageSize);
+            //args.Total = await GetTotalItemsCount();
         }
 
         async Task ReplyHandler(ListViewCommandEventArgs args)
@@ -119,7 +145,7 @@ namespace ForumApiWebLibrary.Client.Components
                     return;
             }
 
-            await FetchData();
+            //await OnReadHandler();
         }
 
         async Task EditHandler(ListViewCommandEventArgs e)

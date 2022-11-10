@@ -3,7 +3,8 @@
 @inject NavigationManager NavigationManager
 @attribute [Authorize]
 
-<TelerikListView Data="TopicsModel.TopicsSortedByRanking"
+<TelerikListView TItem="TopicModel"
+                 OnRead="OnReadHandler"
                  OnModelInit="OnModelInitHandler"
                  OnCreate="CreateHandler"
                  OnDelete="DeleteHandler"
@@ -37,3 +38,5 @@
         <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
     </HeaderTemplate>
 </TelerikListView>
+
+
