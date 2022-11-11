@@ -2,6 +2,7 @@
 @using Telerik.Blazor.Components.Editor
 @inject IForumApiClient ForumApiClient
 @inject IForumAuthenticationService ForumAuthService
+@inject ILogger<PostsModel> Logger
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
@@ -116,9 +117,13 @@
                             Expandable="false"
                             Width="150px" />
             <TreeListCommandColumn Width="220px">
-                <TreeListCommandButton Command="Add" Icon="plus">Reply</TreeListCommandButton>
+                <TreeListCommandButton Command="Reply" Icon="plus">Reply</TreeListCommandButton>
                 <TreeListCommandButton Command="Edit" Icon="edit">Edit</TreeListCommandButton>
                 <TreeListCommandButton Command="Delete" Icon="x">Flag</TreeListCommandButton>
+                <TreeListCommandButton Command="VoteUp" OnClick="OnVoteUp" Icon="check-circle">+1 Vote</TreeListCommandButton>
+                <TreeListCommandButton Command="VoteDown" OnClick="OnVoteDown" Icon="check-outline">-1 Vote</TreeListCommandButton>
+                <TreeListCommandButton Command="VoteDelete" OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</TreeListCommandButton>
+                <TreeListCommandButton Command="FlagAsInappropriate" OnClick="OnFlagAsInappropriate" Icon="x-circle">Flag Topic</TreeListCommandButton>
                 <TreeListCommandButton Command="Save" Icon="save" ShowInEdit="true">Update</TreeListCommandButton>
                 <TreeListCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">Cancel</TreeListCommandButton>
             </TreeListCommandColumn>

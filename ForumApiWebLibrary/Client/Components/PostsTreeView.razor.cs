@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Telerik.Blazor.Components.Breadcrumb;
 using Telerik.Blazor.Components.Editor;
 using Telerik.Blazor.Components;
+using Microsoft.Extensions.Logging;
 
 namespace ForumApiWebLibrary.Client.Components
 {
@@ -183,6 +184,93 @@ namespace ForumApiWebLibrary.Client.Components
         public PostModel OnModelInitHandler()
         {
             return new PostModel() { TId = this.TId };
+        }
+
+        async Task OnFlagAsInappropriate(TreeListCommandEventArgs args)
+        {
+            return;
+        }
+
+        async Task OnVoteUp(TreeListCommandEventArgs args)
+        {
+            PostModel item = (PostModel)args.Item;
+            var response = await ForumApiClient.PostPostVoteAsync(item, 1);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                    var msg = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(msg);
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    //do something with the error
+                    Logger.LogInformation(res);
+
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
+
+            //set the tv_id and vote in the memory store
+            int index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
+            if (index > -1)
+            {
+                PostsModel.RecentPostsList[index] = item;
+            }
+        }
+
+        async Task OnVoteDown(TreeListCommandEventArgs args)
+        {
+            PostModel item = (PostModel)args.Item;
+
+            var response = await ForumApiClient.PostPostVoteAsync(item, 0);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+
+            }
+        }
+
+        async Task OnVoteDelete(TreeListCommandEventArgs args)
+        {
+            PostModel item = (PostModel)args.Item;
+
+            var response = await ForumApiClient.DeletePostVoteAsync(item);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.NoContent:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

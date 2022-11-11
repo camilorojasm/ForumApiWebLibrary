@@ -1,6 +1,8 @@
 ﻿@inject IForumApiClient ForumApiClient
 @inject IForumAuthenticationService ForumAuthService
+@inject ILogger<TopicsModel> Logger
 @inject NavigationManager NavigationManager
+
 @attribute [Authorize]
 
 <TelerikListView TItem="TopicModel"
@@ -24,13 +26,17 @@
     </EditTemplate>
     <Template Context="topic_context">
         <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
-                <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>
-@*                <p> Title : &nbsp; @topic_context.Title </p>
-                <p> Body  : &nbsp; @topic_context.TopicBody </p>*@
-                @*<p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>*@
+            <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>
+            <p> TvId : &nbsp; @topic_context.TvId.ToString() </p>
+            @*<p> Body  : &nbsp; @topic_context.TopicBody </p>*@
+            @*<p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>*@
 
-                <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
-                <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
+            <ListViewCommandButton OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
+            <ListViewCommandButton OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
+            <ListViewCommandButton OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</ListViewCommandButton>
+            <ListViewCommandButton OnClick="OnFlag" Icon="x-circle">Flag Topic</ListViewCommandButton>
+            <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+            <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
         </div>
     </Template>
     <HeaderTemplate>

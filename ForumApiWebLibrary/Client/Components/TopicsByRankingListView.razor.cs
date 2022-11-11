@@ -2,6 +2,7 @@
 using ForumApiDataService.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,51 +32,119 @@ namespace ForumApiWebLibrary.Client.Components
         //    await base.OnInitializedAsync();
         //}
 
-        //private async Task FetchData(int pageNumber, int pageSize)
-        //{
-        //    switch (ActiveTabIndex)
-        //    {
-        //        case 0:
-        //            TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, 1, PageSize);
-        //            break;
-        //        case 1:
-        //            TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, 1, PageSize);
-        //            break;
-        //        case 2:
-        //            TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, 1, PageSize);
-        //            break;
-        //    }
-        //}
-
-        //async Task PageChangedHandler(ListViewCommandEventArgs args)
-        //{
-        //    //result = $"The user is now on page {currPageIndex}";
-        //    var x = "String";
-        //}
-        //async Task PageChangedHandler(int currPageIndex)
-        //{
-        //    //result = $"The user is now on page {currPageIndex}";
-        //}
-
-        async Task OnReadHandler(ListViewReadEventArgs args)
+        private async Task FetchData(int pageNumber, int pageSize)
         {
             switch (ActiveTabIndex)
             {
                 case 0:
-                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, args.Request.Page, args.Request.PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsActiveViewAsync(FId, pageNumber, pageSize);
                     break;
                 case 1:
-                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, args.Request.Page, args.Request.PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsRecentViewAsync(FId, pageNumber, pageSize);
                     break;
                 case 2:
-                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, args.Request.Page, args.Request.PageSize);
+                    TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, pageNumber, pageSize);
                     break;
             }
+        }
+
+        async Task PageChangedHandler(int currPageIndex)
+        {
+            //result = $"The user is now on page {currPageIndex}";
+        }
+
+        async Task OnReadHandler(ListViewReadEventArgs args)
+        {
+            await FetchData(args.Request.Page, args.Request.PageSize);
 
             args.Data = TopicsModel.TopicsSortedByRanking;
             args.Total = TopicsModel.TotalRowCount;
-            //args.Data = await FetchData(args.Request.Page, args.Request.PageSize);
-            //args.Total = await GetTotalItemsCount();
+        }
+
+        async Task OnFlag(ListViewCommandEventArgs args)
+        {
+        }
+
+        async Task OnVoteUp(ListViewCommandEventArgs args)
+        {
+            TopicModel item = (TopicModel)args.Item;
+            var response = await ForumApiClient.PostTopicVoteAsync(item, 1);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                    var msg = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(msg);
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    //do something with the error
+                    Logger.LogInformation(res);
+
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
+
+            //set the tv_id and vote in the memory store
+            int index = TopicsModel.TopicsSortedByRanking.FindIndex(itm => itm.TId == item.TId);
+            if (index > -1)
+            {
+                TopicsModel.TopicsList[index] = item;
+            }
+        }
+
+        async Task OnVoteDown(ListViewCommandEventArgs args)
+        {
+            TopicModel item = (TopicModel)args.Item;
+
+            var response = await ForumApiClient.PostTopicVoteAsync(item, 0);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+
+            }
+        }
+
+        async Task OnVoteDelete(ListViewCommandEventArgs args)
+        {
+            TopicModel item = (TopicModel)args.Item;
+
+            var response = await ForumApiClient.DeleteTopicVoteAsync(item);
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.NoContent:
+                    break;
+                case HttpStatusCode.BadRequest:
+                    string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
+                    //do something with the error
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
+            }
         }
 
         async Task ReplyHandler(ListViewCommandEventArgs args)
@@ -96,6 +165,7 @@ namespace ForumApiWebLibrary.Client.Components
                     break;
                 case HttpStatusCode.BadRequest:
                     string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
                     //do something with the error
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -135,6 +205,7 @@ namespace ForumApiWebLibrary.Client.Components
                     break;
                 case HttpStatusCode.BadRequest:
                     string res = await response.Content.ReadAsStringAsync();
+                    Logger.LogInformation(res);
                     //do something with the error
                     break;
                 case HttpStatusCode.Unauthorized:
@@ -144,8 +215,6 @@ namespace ForumApiWebLibrary.Client.Components
                 default:
                     return;
             }
-
-            //await OnReadHandler();
         }
 
         async Task EditHandler(ListViewCommandEventArgs e)
