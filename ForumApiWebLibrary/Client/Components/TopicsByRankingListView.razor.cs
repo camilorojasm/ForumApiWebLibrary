@@ -24,7 +24,10 @@ namespace ForumApiWebLibrary.Client.Components
 
         public TopicsModel TopicsModel { get; set; } = new TopicsModel();
 
+        public TelerikListView<TopicModel> TopicsModelListViewRef { get; set; }
+
         public int PageSize { get; set; } = 10;
+        public int PageIndex { get; set; }
 
         //protected override async Task OnInitializedAsync()
         //{
@@ -56,6 +59,8 @@ namespace ForumApiWebLibrary.Client.Components
 
         async Task OnReadHandler(ListViewReadEventArgs args)
         {
+            PageIndex = args.Request.Page;
+
             await FetchData(args.Request.Page, args.Request.PageSize);
 
             args.Data = TopicsModel.TopicsSortedByRanking;
@@ -71,30 +76,31 @@ namespace ForumApiWebLibrary.Client.Components
             TopicModel item = (TopicModel)args.Item;
             var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
 
-            if (index > -1)
+            if (item.TvId == null && index>-1)
             {
                 var response = await ForumApiClient.PostTopicVoteAsync(item, 1);
 
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.Created:
-                        var msg = await response.Content.ReadAsStringAsync();
-                        var reply = JsonSerializer.Deserialize<TopicVoteReplyModel>(msg);
-
+                        {
+                            TopicsModelListViewRef.Rebind();
+                        }
                         //update memory values
-                        TopicsModel.TopicsList[index].TvId = reply.TvId;
-                        TopicsModel.TopicsList[index].Vote = 1;
-
-                        Logger.LogInformation(msg);
+                        //TopicsModel.TopicsList[index].TvId = reply.TvId;
+                        //TopicsModel.TopicsList[index].Vote = 1;
                         break;
                     case HttpStatusCode.BadRequest:
-                        string res = await response.Content.ReadAsStringAsync();
-
-                        Logger.LogInformation("Here " + res);
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
                         break;
                     case HttpStatusCode.Unauthorized:
-                        await ForumAuthService.Logout();
-                        NavigationManager.NavigateTo("/login");
+                        {
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                        }
                         break;
                     default:
                         return;
@@ -102,23 +108,28 @@ namespace ForumApiWebLibrary.Client.Components
             }
             else
             {
-                if (item.Vote != TopicsModel.TopicsList[index].Vote)
+                if (item.Vote != 1)
                 {
                     var response = await ForumApiClient.PutTopicVoteAsync(item, 1);
 
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.NoContent:
-                            var msg = await response.Content.ReadAsStringAsync();
-                            Logger.LogInformation(msg);
+                            {
+                                TopicsModelListViewRef.Rebind();
+                            }
                             break;
                         case HttpStatusCode.BadRequest:
-                            string res = await response.Content.ReadAsStringAsync();
-                            Logger.LogInformation(res);
+                            {
+                                string res = await response.Content.ReadAsStringAsync();
+                                Logger.LogInformation(res);
+                            }
                             break;
                         case HttpStatusCode.Unauthorized:
-                            await ForumAuthService.Logout();
-                            NavigationManager.NavigateTo("/login");
+                            {
+                                await ForumAuthService.Logout();
+                                NavigationManager.NavigateTo("/login");
+                            }
                             break;
                         default:
                             return;
@@ -133,30 +144,28 @@ namespace ForumApiWebLibrary.Client.Components
             TopicModel item = (TopicModel)args.Item;
             var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
 
-            if (index > -1)
+            if (item.TvId == null && index>-1)
             {
                 var response = await ForumApiClient.PostTopicVoteAsync(item, 0);
 
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.Created:
-                        var msg = await response.Content.ReadAsStringAsync();
-                        var reply = JsonSerializer.Deserialize<TopicVoteReplyModel>(msg);
-
-                        //update memory values
-                        TopicsModel.TopicsList[index].TvId = reply.TvId;
-                        TopicsModel.TopicsList[index].Vote = 1;
-
-                        Logger.LogInformation(msg);
+                        {
+                            TopicsModelListViewRef.Rebind();
+                        }
                         break;
                     case HttpStatusCode.BadRequest:
-                        string res = await response.Content.ReadAsStringAsync();
-
-                        Logger.LogInformation("Here " + res);
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation("Here " + res);
+                        }
                         break;
                     case HttpStatusCode.Unauthorized:
-                        await ForumAuthService.Logout();
-                        NavigationManager.NavigateTo("/login");
+                        {
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                        }
                         break;
                     default:
                         return;
@@ -164,23 +173,30 @@ namespace ForumApiWebLibrary.Client.Components
             }
             else
             {
-                if (item.Vote != TopicsModel.TopicsList[index].Vote)
+                if (item.Vote != 0)
                 {
                     var response = await ForumApiClient.PutTopicVoteAsync(item, 0);
 
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.NoContent:
-                            var msg = await response.Content.ReadAsStringAsync();
-                            Logger.LogInformation(msg);
+                            {
+                                //var msg = await response.Content.ReadAsStringAsync();
+                                //Logger.LogInformation(msg);
+                                TopicsModelListViewRef.Rebind();
+                            }
                             break;
                         case HttpStatusCode.BadRequest:
-                            string res = await response.Content.ReadAsStringAsync();
-                            Logger.LogInformation(res);
+                            {
+                                string res = await response.Content.ReadAsStringAsync();
+                                Logger.LogInformation(res);
+                            }
                             break;
                         case HttpStatusCode.Unauthorized:
-                            await ForumAuthService.Logout();
-                            NavigationManager.NavigateTo("/login");
+                            {
+                                await ForumAuthService.Logout();
+                                NavigationManager.NavigateTo("/login");
+                            }
                             break;
                         default:
                             return;
@@ -194,32 +210,34 @@ namespace ForumApiWebLibrary.Client.Components
         async Task OnVoteDelete(ListViewCommandEventArgs args)
         {
             TopicModel item = (TopicModel)args.Item;
+            var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
 
-            var response = await ForumApiClient.DeleteTopicVoteAsync(item);
-
-            switch (response.StatusCode)
+            if (item.TvId != null && index>-1)
             {
-                case HttpStatusCode.NoContent:
-                    var msg = await response.Content.ReadAsStringAsync();
+                var response = await ForumApiClient.DeleteTopicVoteAsync(item);
 
-                    int index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
-                    if (index > -1)
-                    {
-                        TopicsModel.TopicsList[index].TvId = null;
-                        TopicsModel.TopicsList[index].Vote = null;
-                    }
-
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(res);
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NoContent:
+                        {
+                            TopicsModelListViewRef.Rebind();
+                        }
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        {
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                        }
+                        break;
+                    default:
+                        return;
+                }
             }
         }
 

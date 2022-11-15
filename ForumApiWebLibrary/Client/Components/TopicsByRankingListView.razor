@@ -5,7 +5,8 @@
 
 @attribute [Authorize]
 
-<TelerikListView TItem="TopicModel"
+<TelerikListView @ref="TopicsModelListViewRef"
+                 TItem="TopicModel"
                  OnRead="OnReadHandler"
                  OnModelInit="OnModelInitHandler"
                  OnCreate="CreateHandler"
@@ -27,7 +28,8 @@
     <Template Context="topic_context">
         <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
             <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>
-            <p> TvId : &nbsp; @topic_context.TvId.ToString() </p> &nbsp;&nbsp; <p> vote : &nbsp; @topic_context.Vote.ToString() </p>
+            <p> TvId : &nbsp; @topic_context.TvId </p> <br/>
+            <p> Vote : &nbsp; @topic_context.Vote </p>
             @*<p> Body  : &nbsp; @topic_context.TopicBody </p>*@
             @*<p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>*@
 
