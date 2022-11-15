@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Telerik.Blazor.Components;
 
@@ -68,60 +69,127 @@ namespace ForumApiWebLibrary.Client.Components
         async Task OnVoteUp(ListViewCommandEventArgs args)
         {
             TopicModel item = (TopicModel)args.Item;
-            var response = await ForumApiClient.PostTopicVoteAsync(item, 1);
+            var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
 
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.Created:
-                    var msg = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(msg);
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    //do something with the error
-                    Logger.LogInformation(res);
-
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
-            }
-
-            //set the tv_id and vote in the memory store
-            int index = TopicsModel.TopicsSortedByRanking.FindIndex(itm => itm.TId == item.TId);
             if (index > -1)
             {
-                TopicsModel.TopicsList[index] = item;
+                var response = await ForumApiClient.PostTopicVoteAsync(item, 1);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        var msg = await response.Content.ReadAsStringAsync();
+                        var reply = JsonSerializer.Deserialize<TopicVoteReplyModel>(msg);
+
+                        //update memory values
+                        TopicsModel.TopicsList[index].TvId = reply.TvId;
+                        TopicsModel.TopicsList[index].Vote = 1;
+
+                        Logger.LogInformation(msg);
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        string res = await response.Content.ReadAsStringAsync();
+
+                        Logger.LogInformation("Here " + res);
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
+            }
+            else
+            {
+                if (item.Vote != TopicsModel.TopicsList[index].Vote)
+                {
+                    var response = await ForumApiClient.PutTopicVoteAsync(item, 1);
+
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NoContent:
+                            var msg = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(msg);
+                            break;
+                        case HttpStatusCode.BadRequest:
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                            break;
+                        default:
+                            return;
+
+                    }
+                }
             }
         }
 
         async Task OnVoteDown(ListViewCommandEventArgs args)
         {
             TopicModel item = (TopicModel)args.Item;
+            var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
 
-            var response = await ForumApiClient.PostTopicVoteAsync(item, 0);
-
-            switch (response.StatusCode)
+            if (index > -1)
             {
-                case HttpStatusCode.Created:
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(res);
-                    //do something with the error
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
+                var response = await ForumApiClient.PostTopicVoteAsync(item, 0);
 
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        var msg = await response.Content.ReadAsStringAsync();
+                        var reply = JsonSerializer.Deserialize<TopicVoteReplyModel>(msg);
+
+                        //update memory values
+                        TopicsModel.TopicsList[index].TvId = reply.TvId;
+                        TopicsModel.TopicsList[index].Vote = 1;
+
+                        Logger.LogInformation(msg);
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        string res = await response.Content.ReadAsStringAsync();
+
+                        Logger.LogInformation("Here " + res);
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
+            }
+            else
+            {
+                if (item.Vote != TopicsModel.TopicsList[index].Vote)
+                {
+                    var response = await ForumApiClient.PutTopicVoteAsync(item, 0);
+
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NoContent:
+                            var msg = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(msg);
+                            break;
+                        case HttpStatusCode.BadRequest:
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                            break;
+                        default:
+                            return;
+
+                    }
+                }
             }
         }
+
 
         async Task OnVoteDelete(ListViewCommandEventArgs args)
         {
@@ -132,11 +200,19 @@ namespace ForumApiWebLibrary.Client.Components
             switch (response.StatusCode)
             {
                 case HttpStatusCode.NoContent:
+                    var msg = await response.Content.ReadAsStringAsync();
+
+                    int index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
+                    if (index > -1)
+                    {
+                        TopicsModel.TopicsList[index].TvId = null;
+                        TopicsModel.TopicsList[index].Vote = null;
+                    }
+
                     break;
                 case HttpStatusCode.BadRequest:
                     string res = await response.Content.ReadAsStringAsync();
                     Logger.LogInformation(res);
-                    //do something with the error
                     break;
                 case HttpStatusCode.Unauthorized:
                     await ForumAuthService.Logout();
