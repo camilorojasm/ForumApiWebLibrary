@@ -50,6 +50,7 @@ namespace ForumApiWebLibrary.Client.Components
                     TopicsModel = await ForumApiClient.GetTopicsUpCountViewAsync(FId, pageNumber, pageSize);
                     break;
             }
+            await base.OnInitializedAsync();
         }
 
         async Task PageChangedHandler(int currPageIndex)
@@ -69,6 +70,32 @@ namespace ForumApiWebLibrary.Client.Components
 
         async Task OnFlag(ListViewCommandEventArgs args)
         {
+            TopicModel item = (TopicModel)args.Item;
+            var index = TopicsModel.TopicsList.FindIndex(itm => itm.TId == item.TId);
+
+            if (index > -1)
+            {
+                var response = await ForumApiClient.PostTopicInappropAsync(item);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        TopicsModelListViewRef.Rebind();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
+            }
         }
 
         async Task OnVoteUp(ListViewCommandEventArgs args)
@@ -230,10 +257,8 @@ namespace ForumApiWebLibrary.Client.Components
                         }
                         break;
                     case HttpStatusCode.Unauthorized:
-                        {
-                            await ForumAuthService.Logout();
-                            NavigationManager.NavigateTo("/login");
-                        }
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
                         break;
                     default:
                         return;

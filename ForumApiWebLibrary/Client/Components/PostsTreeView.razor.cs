@@ -10,6 +10,7 @@ using Telerik.Blazor.Components.Breadcrumb;
 using Telerik.Blazor.Components.Editor;
 using Telerik.Blazor.Components;
 using Microsoft.Extensions.Logging;
+using ForumApiWebLibrary.Client.Pages;
 
 namespace ForumApiWebLibrary.Client.Components
 {
@@ -21,6 +22,8 @@ namespace ForumApiWebLibrary.Client.Components
         //public List<BreadcrumbItem> PostsBreandcrumbItems { get; set; }
 
         public PostsModel PostsModel { get; set; } = new PostsModel();
+
+        public TelerikTreeList<PostModel> PostModelTreeListRef;
 
         public TelerikEditor Editor { get; set; } = new TelerikEditor();
 
@@ -188,88 +191,183 @@ namespace ForumApiWebLibrary.Client.Components
 
         async Task OnFlagAsInappropriate(TreeListCommandEventArgs args)
         {
-            return;
+            PostModel item = (PostModel)args.Item;
+
+            if (item.PId > 0)
+            {
+                var response = await ForumApiClient.PostPostInappropAsync(item);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        await GetRecentPostsListAsync();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
+            }
+            
         }
 
         async Task OnVoteUp(TreeListCommandEventArgs args)
         {
             PostModel item = (PostModel)args.Item;
-            var response = await ForumApiClient.PostPostVoteAsync(item, 1);
+            var index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
 
-            switch (response.StatusCode)
+            if (item.PvId == null && index > -1)
             {
-                case HttpStatusCode.Created:
-                    var msg = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(msg);
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    //do something with the error
-                    Logger.LogInformation(res);
+                var response = await ForumApiClient.PostPostVoteAsync(item, 1);
 
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        await GetRecentPostsListAsync();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
             }
+            else
+            {
+                if (item.Vote != 1)
+                {
+                    var response = await ForumApiClient.PutPostVoteAsync(item, 1);
+
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NoContent:
+                            await GetRecentPostsListAsync();
+                            break;
+                        case HttpStatusCode.BadRequest:
+                            {
+                                string res = await response.Content.ReadAsStringAsync();
+                                Logger.LogInformation(res);
+                            }
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                            break;
+                        default:
+                            return;
+                    }
+
+                }
+            }
+
+            //PostModelTreeListRef.Rebind();
 
             //set the tv_id and vote in the memory store
-            int index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
-            if (index > -1)
-            {
-                PostsModel.RecentPostsList[index] = item;
-            }
+            //int index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
+            //if (index > -1)
+            //{
+            //    PostsModel.RecentPostsList[index] = item;
+            //}
         }
 
         async Task OnVoteDown(TreeListCommandEventArgs args)
         {
             PostModel item = (PostModel)args.Item;
+            var index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
 
-            var response = await ForumApiClient.PostPostVoteAsync(item, 0);
-
-            switch (response.StatusCode)
+            if (item.PvId == null && index > -1)
             {
-                case HttpStatusCode.Created:
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(res);
-                    //do something with the error
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
+                var response = await ForumApiClient.PostPostVoteAsync(item, 0);
 
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Created:
+                        await GetRecentPostsListAsync();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        {
+                            string res = await response.Content.ReadAsStringAsync();
+                            Logger.LogInformation(res);
+                        }
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
+            }
+            else
+            {
+                if (item.Vote != 0)
+                {
+                    var response = await ForumApiClient.PutPostVoteAsync(item, 0);
+
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NoContent:
+                            await GetRecentPostsListAsync();
+                            break;
+                        case HttpStatusCode.BadRequest:
+                            {
+                                string res = await response.Content.ReadAsStringAsync();
+                                Logger.LogInformation(res);
+                            }
+                            break;
+                        case HttpStatusCode.Unauthorized:
+                            await ForumAuthService.Logout();
+                            NavigationManager.NavigateTo("/login");
+                            break;
+                        default:
+                            return;
+                    }
+
+                }
             }
         }
 
         async Task OnVoteDelete(TreeListCommandEventArgs args)
         {
             PostModel item = (PostModel)args.Item;
+            var index = PostsModel.RecentPostsList.FindIndex(itm => itm.PId == item.PId);
 
-            var response = await ForumApiClient.DeletePostVoteAsync(item);
-
-            switch (response.StatusCode)
+            if (item.PvId != null && index > -1)
             {
-                case HttpStatusCode.NoContent:
-                    break;
-                case HttpStatusCode.BadRequest:
-                    string res = await response.Content.ReadAsStringAsync();
-                    Logger.LogInformation(res);
-                    //do something with the error
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    await ForumAuthService.Logout();
-                    NavigationManager.NavigateTo("/login");
-                    break;
-                default:
-                    return;
+                var response = await ForumApiClient.DeletePostVoteAsync(item);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NoContent:
+                        await GetRecentPostsListAsync();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        string res = await response.Content.ReadAsStringAsync();
+                        Logger.LogInformation(res);
+                        //do something with the error
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        await ForumAuthService.Logout();
+                        NavigationManager.NavigateTo("/login");
+                        break;
+                    default:
+                        return;
+                }
             }
         }
     }

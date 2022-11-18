@@ -76,7 +76,8 @@
     <p>Number of Down Votes: @PostsModel.TopicDownCount</p>
     <br />
 
-    <TelerikTreeList Data="PostsModel.RecentPostsList"
+    <TelerikTreeList @ref="PostModelTreeListRef"
+                     Data="PostsModel.RecentPostsList"
                      EditMode="@TreeListEditMode.Inline"
                      OnUpdate="UpdateItem"
                      OnDelete="DeleteItem"
@@ -98,8 +99,11 @@
                             Width="250px" >
                             <Template>>@{
                                 PostModel post = context as PostModel;
-                                <img src="@( $"larry200.jpg" )" />
-                                <text>@post.ImageGuid</text>
+                                
+                                <img src="@( $"larry200.jpg" )" /> <br />
+                                <text>@post.ImageGuid</text> <br />
+                                <p> PvId : &nbsp; @post.PvId </p> <br />
+                                <p> Vote : &nbsp; @post.Vote </p>
                             }
                             </Template>
             </TreeListColumn>

@@ -25,7 +25,6 @@ builder.Services.AddForumIdentityClient(httpClient =>
 {
     var headers = httpClient.DefaultRequestHeaders;
     headers.Add(nameof(identityClientOptions.Application), identityClientOptions.Application);
-
     httpClient.BaseAddress = new Uri(identityClientOptions.ServiceUri);
 }).AddForumAuthenticationHeader();
 
@@ -33,19 +32,17 @@ builder.Services.AddForumAuthenticationService();
 
 
 // Configure FORUM API
-var apiClientOptions = builder.Configuration.GetSection(nameof(ForumApiClientOptions)).Get<ForumApiClientOptions>();
-
+var forumClientOptions = builder.Configuration.GetSection(nameof(ForumApiClientOptions)).Get<ForumApiClientOptions>();
 builder.Services.AddForumIdentityClient(options =>
 {
-    options.Application = apiClientOptions.Application;
-    options.ServiceUri = apiClientOptions.ServiceUri;
-    options.DbSchema = apiClientOptions.DbSchema;
+    options.Application = forumClientOptions.Application;
+    options.ServiceUri = forumClientOptions.ServiceUri;
+    options.DbSchema = forumClientOptions.DbSchema;
 }, httpClient =>
 {
     var headers = httpClient.DefaultRequestHeaders;
-    headers.Add(nameof(apiClientOptions.Application), apiClientOptions.Application);
-
-    httpClient.BaseAddress = new Uri(apiClientOptions.ServiceUri);
+    headers.Add(nameof(forumClientOptions.Application), forumClientOptions.Application);
+    httpClient.BaseAddress = new Uri(forumClientOptions.ServiceUri);
 }).AddForumAuthenticationHeader();
 
 

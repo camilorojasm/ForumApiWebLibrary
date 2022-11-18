@@ -43,6 +43,7 @@
     </Template>
     <HeaderTemplate>
         <h4>@TopicsModel.ForumTitle</h4> <br />
+@*        <h4>Viewed by: &nbsp; @TopicsModel.UserProfiles.SingleOrDefault().UserName </h4> <br />*@
         <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
     </HeaderTemplate>
 </TelerikListView>
