@@ -1,0 +1,62 @@
+﻿@page "/register"
+@layout MainLayout
+
+<PageTitle>Registration Page</PageTitle>
+
+<div class="demo-section">
+    @if (ValidSubmit)
+    {
+        <div class="demo-alert demo-alert-success" role="alert">
+            The form was submitted successfully.
+        </div>
+    }
+    else
+    {
+        <TelerikForm Model="SignUpUser"
+                 OnValidSubmit="HandleValidSubmit"
+                 OnInvalidSubmit="HandleInvalidSubmit">
+            <FormValidation>
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+            </FormValidation>
+            <FormItems>
+                <FormGroup LabelText="User Personal Information">
+                    <FormItem Field="@nameof(RegistrationModel.UserName)">
+                        <Template>
+                            <label for="username" class="k-label k-form-label">User Name:</label>
+                            <TelerikTextBox Id="mail" @bind-Value="@SignUpUser.UserName" InputMode="text" PlaceHolder="Username"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => SignUpUser.UserName)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                    <FormItem Field="@nameof(RegistrationModel.Email)">
+                        <Template>
+                            <label for="mail" class="k-label k-form-label">Email:</label>
+                            <TelerikTextBox Id="mail" @bind-Value="@SignUpUser.Email" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => SignUpUser.Email)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                </FormGroup>
+                <FormGroup LabelText="Password and Confirmation">
+                    <FormItem Field="@nameof(RegistrationModel.Password)">
+                        <Template>
+                            <label for="pass" class="k-label k-form-label">Password:</label>
+                            <TelerikTextBox Id="pass" @bind-Value="@SignUpUser.Password" Password="true"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => SignUpUser.Password)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                    <FormItem Field="@nameof(RegistrationModel.PasswordConfirmation)">
+                        <Template>
+                            <label for="pass" class="k-label k-form-label">Password Confirmation:</label>
+                            <TelerikTextBox Id="pass" @bind-Value="@SignUpUser.PasswordConfirmation" Password="true"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => SignUpUser.PasswordConfirmation)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                </FormGroup>
+                <FormGroup LabelText="Email Preferences">
+                    <FormItem Field="@nameof(RegistrationModel.OptinInternal)" />
+                    <FormItem Field="@nameof(RegistrationModel.OptinExternal)" />
+                </FormGroup>
+            </FormItems>
+        </TelerikForm>
+    }
+</div>
+

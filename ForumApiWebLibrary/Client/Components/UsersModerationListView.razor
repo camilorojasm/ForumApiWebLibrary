@@ -1,0 +1,15 @@
+﻿@inject IForumApiClient ForumApiClient
+
+<TelerikListView Data=@UsersModeration.UsersModerationList
+                 Pageable="true"
+                 Class="topics-list-view">
+    <Template >
+        <div class="topics-listview-item" style="margin: 5px; padding: 5px;">
+            User &nbsp; : &nbsp; @context.UserName <br />
+            Email &nbsp;&nbsp; : &nbsp; @context.EmailAddress <br />
+            Banned : @context.Banned
+        </div>
+        <ListViewCommandButton OnClick="OnBan" Icon="check-circle">Ban</ListViewCommandButton>
+    </Template>
+</TelerikListView>
+

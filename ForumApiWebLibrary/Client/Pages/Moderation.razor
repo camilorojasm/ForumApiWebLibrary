@@ -1,6 +1,27 @@
 ﻿@page "/moderation"
+@using ForumApiWebLibrary.Client.Components
+@inject IForumApiClient ForumApiClient
+@*@inject NavigationManager NavigationManager*@
+@attribute [Authorize]
+
 @layout MainLayout
 
 <PageTitle>Moderation Page</PageTitle>
 
-Moderation
+<CascadingValue Value="ActiveTabIndex">
+    <TelerikTabStrip ActiveTabIndex="ActiveTabIndex" ActiveTabIndexChanged="@TabChangedHandler">
+        <TabStripTab Title="Users">
+            @*<textarea>Users tools go here</textarea>*@
+            <UsersModerationListView />
+        </TabStripTab>
+        <TabStripTab Title="Topics">
+            <textarea>Topics tools go here</textarea>
+        </TabStripTab>
+        <TabStripTab Title="Posts">
+            <textarea>Posts tools go here</textarea>
+        </TabStripTab>
+        <TabStripTab Title="Blogs">
+            <textarea>Blog tools go here</textarea>
+        </TabStripTab>
+    </TelerikTabStrip>
+</CascadingValue>

@@ -192,31 +192,26 @@ namespace ForumApiWebLibrary.Client.Components
         async Task OnFlagAsInappropriate(TreeListCommandEventArgs args)
         {
             PostModel item = (PostModel)args.Item;
+            var response = await ForumApiClient.PostPostInappropAsync(item);
 
-            if (item.PId > 0)
+            switch (response.StatusCode)
             {
-                var response = await ForumApiClient.PostPostInappropAsync(item);
-
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.Created:
-                        await GetRecentPostsListAsync();
-                        break;
-                    case HttpStatusCode.BadRequest:
-                        {
-                            string res = await response.Content.ReadAsStringAsync();
-                            Logger.LogInformation(res);
-                        }
-                        break;
-                    case HttpStatusCode.Unauthorized:
-                        await ForumAuthService.Logout();
-                        NavigationManager.NavigateTo("/login");
-                        break;
-                    default:
-                        return;
-                }
+                case HttpStatusCode.Created:
+                    await GetRecentPostsListAsync();
+                    break;
+                case HttpStatusCode.BadRequest:
+                    {
+                        var res = await response.Content.ReadAsStringAsync();
+                        Logger.LogInformation(res);
+                    }
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    await ForumAuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                    break;
+                default:
+                    return;
             }
-            
         }
 
         async Task OnVoteUp(TreeListCommandEventArgs args)
