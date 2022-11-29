@@ -1,0 +1,29 @@
+﻿@inject IForumApiClient ForumApiClient
+@inject IForumAuthenticationService ForumAuthService
+@inject ILogger<UsersModerationModel> Logger
+@inject NavigationManager NavigationManager
+
+<TelerikGrid TItem=UserModerationModel
+             @ref=GridRef
+             Height=650
+             Width="100%"
+             Sortable=true
+             Resizable="true"
+             Pageable=true
+             OnRead=ReadItems>
+    <GridColumns>
+        <GridColumn Width="64px" Field=@nameof(UserModerationModel.UserName) />
+        <GridColumn Width="24px" Field=@nameof(UserModerationModel.TopicsBannedCount) Title="# Topics Banned" />
+        <GridColumn Width="24px" Field=@nameof(UserModerationModel.PostsBannedCount) Title="# Posts Banned" />
+ <GridColumn Width="30px" Field=@nameof(UserModerationModel.Banned) Title="Banned">
+            <Template Context="ctx">
+                @{
+                    var r = ctx as UserModerationModel;
+                    <TelerikCheckBox Enabled="true" 
+                                     Value="Convert.ToBoolean(r.Banned)" 
+                                     ValueChanged="@( (bool value) => OnCheckBoxValueChangedAsync(value, r) )" />
+                }
+            </Template>
+         </GridColumn>
+    </GridColumns>
+</TelerikGrid> 

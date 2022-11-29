@@ -12,7 +12,6 @@ namespace ForumApiWebLibrary.Client.Components
     public partial class UsersModerationListView : ComponentBase
     {
         public UsersModerationModel UsersModeration { get; set; } = new UsersModerationModel();
-        //public List<UserModerationModel> UsersModerationList { get; set; } = new List<UserModerationModel>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -20,6 +19,11 @@ namespace ForumApiWebLibrary.Client.Components
         }
 
         async Task OnBan(ListViewCommandEventArgs args)
+        {
+
+        }
+
+        async Task OnUnban(ListViewCommandEventArgs args)
         {
 
         }

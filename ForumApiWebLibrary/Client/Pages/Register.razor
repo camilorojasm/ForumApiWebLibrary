@@ -19,7 +19,7 @@
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
             <FormItems>
-                <FormGroup LabelText="User Personal Information">
+                <FormGroup LabelText="Personal Information">
                     <FormItem Field="@nameof(RegistrationModel.UserName)">
                         <Template>
                             <label for="username" class="k-label k-form-label">User Name:</label>
@@ -51,7 +51,7 @@
                         </Template>
                     </FormItem>
                 </FormGroup>
-                <FormGroup LabelText="Email Preferences">
+                <FormGroup LabelText="Contact Preferences">
                     <FormItem Field="@nameof(RegistrationModel.OptinInternal)" />
                     <FormItem Field="@nameof(RegistrationModel.OptinExternal)" />
                 </FormGroup>
