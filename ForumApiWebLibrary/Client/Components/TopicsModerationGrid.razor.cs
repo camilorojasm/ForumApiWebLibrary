@@ -13,24 +13,24 @@ using Telerik.Blazor.Components;
 
 namespace ForumApiWebLibrary.Client.Components
 {
-    public partial class UsersModerationGrid : ComponentBase
+    public partial class TopicsModerationGrid : ComponentBase
     {
-        public UsersModerationModel UsersModeration { get; set; } = new UsersModerationModel();
+        public TopicsModerationModel TopicsModeration { get; set; } = new TopicsModerationModel();
 
-        private TelerikGrid<UserModerationModel> GridRef { get; set; }
+        private TelerikGrid<TopicModerationModel> GridRef { get; set; }
 
         //private async Task FetchData()
         //{
-        //    UsersModeration = await ForumApiClient.GetUsersModerationAsync();
+        //    TopicsModeration = await ForumApiClient.GetTopicsModerationAsync();
         //}
-        private async Task OnCheckBoxValueChangedAsync(bool value, UserModerationModel userModModel)
+        private async Task OnCheckBoxValueChangedAsync(bool value, TopicModerationModel TopicModModel)
         {
             HttpResponseMessage response;
 
             // update the model value because the framework does not allow two-way binding when the event is used
             if (value)
             {
-                response = await ForumApiClient.PostAccountModBanAsync(userModModel);
+                response = await ForumApiClient.PostTopicModBanAsync(TopicModModel);
 
                 switch (response.StatusCode)
                 {
@@ -53,7 +53,7 @@ namespace ForumApiWebLibrary.Client.Components
             }
             else
             {
-                response = await ForumApiClient.DeleteAccountModBanAsync(userModModel);
+                response = await ForumApiClient.DeleteTopicModBanAsync(TopicModModel);
 
                 switch (response.StatusCode)
                 {
@@ -78,16 +78,16 @@ namespace ForumApiWebLibrary.Client.Components
 
         private async Task ReadItems(GridReadEventArgs args)
         {
-            UsersModeration = await ForumApiClient.GetUsersModerationAsync();
-            //GridData = UsersModeration.UsersModerationList;
+            TopicsModeration = await ForumApiClient.GetTopicsModerationAsync();
+            //GridData = TopicsModeration.TopicsModerationList;
 
-            args.Data = UsersModeration.UsersModerationList;
-            args.Total = UsersModeration.UsersModerationList.Count;
+            args.Data = TopicsModeration.TopicsModerationList;
+            args.Total = TopicsModeration.TopicsModerationList.Count;
         }
 
         //protected override async Task OnInitializedAsync()
         //{
-        //    UsersModeration = await ForumApiClient.GetUsersModerationAsync();
+        //    TopicsModeration = await ForumApiClient.GetTopicsModerationAsync();
         //}
     }
 }

@@ -13,8 +13,8 @@
              OnRead=ReadItems>
     <GridColumns>
         <GridColumn Width="64px" Field=@nameof(UserModerationModel.UserName) />
-        <GridColumn Width="24px" Field=@nameof(UserModerationModel.TopicsBannedCount) Title="# Topics Banned" />
-        <GridColumn Width="24px" Field=@nameof(UserModerationModel.PostsBannedCount) Title="# Posts Banned" />
+        <GridColumn Width="24px" Field=@nameof(UserModerationModel.TopicsBannedCount) Title="Topics Flagged" />
+        <GridColumn Width="24px" Field=@nameof(UserModerationModel.PostsBannedCount) Title="Posts Flagged" />
  <GridColumn Width="30px" Field=@nameof(UserModerationModel.Banned) Title="Banned">
             <Template Context="ctx">
                 @{

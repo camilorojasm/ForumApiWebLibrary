@@ -1,0 +1,47 @@
+﻿@inject IForumApiClient ForumApiClient
+@inject IForumAuthenticationService ForumAuthService
+@inject ILogger<TopicsModerationModel> Logger
+@inject NavigationManager NavigationManager
+
+<TelerikGrid TItem=TopicModerationModel
+             @ref=GridRef
+             Height=650
+             Width="100%"
+             Sortable=true
+             Resizable="true"
+             Pageable=true
+             OnRead=ReadItems>
+    <GridColumns> 
+        <GridColumn Width="32px" Field=@nameof(TopicModerationModel.UserName)>
+            <Template Context="ctx">
+                @{
+                    var topicModeration = ctx as TopicModerationModel;
+                    <p>
+                        @topicModeration.UserName <br />
+                        @topicModeration.EmailAddress
+                    </p>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Width="64px" Field=@nameof(TopicModerationModel.Body) Title="Topics">
+            <Template Context="ctx">
+                @{
+                    var topicModeration = ctx as TopicModerationModel;
+                        <a href="posts/@topicModeration.TopicId">@topicModeration.Title</a> <br />
+                        @topicModeration.Body
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Width="24px" Field=@nameof(TopicModerationModel.InappropCount) Title="Flag Count" />
+        <GridColumn Width="24px" Field=@nameof(TopicModerationModel.Banned) Title="Banned">
+            <Template Context="ctx">
+                @{
+                    var topicModeration = ctx as TopicModerationModel;
+                    <TelerikCheckBox Enabled="true"
+                                 Value="Convert.ToBoolean(topicModeration.Banned)"
+                                 ValueChanged="@( (bool value) => OnCheckBoxValueChangedAsync(value, topicModeration) )" />
+                }
+            </Template>
+         </GridColumn>
+    </GridColumns>
+</TelerikGrid> 
