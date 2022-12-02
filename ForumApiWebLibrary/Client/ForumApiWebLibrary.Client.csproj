@@ -11,7 +11,7 @@
     <Optimize>False</Optimize>
   </PropertyGroup>-->
   <ItemGroup>
-    <PackageReference Include="ForumAssets.ForumApi.Client" Version="5.4.0" />
+    <PackageReference Include="ForumAssets.ForumApi.Client" Version="5.5.0" />
     <PackageReference Include="ForumAssets.Wasm.Auth.Service" Version="1.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />

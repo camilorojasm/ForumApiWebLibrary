@@ -1,1 +1,48 @@
-﻿
+﻿@inject IForumApiClient ForumApiClient
+@inject IForumAuthenticationService ForumAuthService
+@inject ILogger<PostsModerationModel> Logger
+@inject NavigationManager NavigationManager
+
+<TelerikGrid TItem=PostModerationModel
+             @ref=GridRef
+             Height=650
+             Width="100%"
+             Sortable=true
+             Resizable="true"
+             Pageable=true
+             OnRead=ReadItems>
+    <GridColumns> 
+        <GridColumn Width="32px" Field=@nameof(PostModerationModel.UserName)>
+            <Template Context="ctx">
+                @{
+                    var postModeration = ctx as PostModerationModel;
+                        <p>
+                        @postModeration.UserName <br />
+                        @postModeration.EmailAddress
+                        </p>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Width="64px" Field=@nameof(PostModerationModel.Body) Title="Topics">
+            <Template Context="ctx">
+                @{
+                    var postModeration = ctx as PostModerationModel;
+                    <a href="posts/@postModeration.TopicId">@postModeration.TopicTitle</a> <br />
+                    <a href="posts/@postModeration.TopicId">@postModeration.Title</a> <br />
+                    @postModeration.Body
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Width="24px" Field=@nameof(PostModerationModel.InappropCount) Title="Flag Count" />
+        <GridColumn Width="24px" Field=@nameof(PostModerationModel.Banned) Title="Banned">
+            <Template Context="ctx">
+                @{
+                    var postModeration = ctx as PostModerationModel;
+                        <TelerikCheckBox Enabled="true"
+                                 Value="Convert.ToBoolean(postModeration.Banned)"
+                                 ValueChanged="@( (bool value) => OnCheckBoxValueChangedAsync(value, postModeration) )" />
+                }
+            </Template>
+         </GridColumn>
+    </GridColumns>
+</TelerikGrid> 
