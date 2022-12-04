@@ -92,35 +92,52 @@
             <TreeListCommandButton Command="Add" Icon="add">Post</TreeListCommandButton>
         </TreeListToolBar>
         <TreeListColumns>
-            <TreeListColumn Field="UserName"
-                            Editable="false"
-                            Expandable="true"
-                            Resizable="true"
-                            Width="250px" >
-                            <Template>>@{
-                                PostModel post = context as PostModel;
-                                
-                                <img src="@( $"larry200.jpg" )" /> <br />
-                                <text>@post.ImageGuid</text> <br />
-                                <p> PvId : &nbsp; @post.PvId </p> <br />
-                                <p> Vote : &nbsp; @post.Vote </p>
-                            }
-                            </Template>
+            <TreeListColumn 
+                Field="UserName"
+                Editable="false"
+                Expandable="true"
+                Resizable="true"
+                Width="250px" >
+                <Template>@{
+                    PostModel post = context as PostModel;
+                    <img src="@( $"larry200.jpg" )" /> <br />
+                    //<text>@post.ImageGuid</text> <br />
+                    //<p> PvId : &nbsp; @post.PvId </p> <br />
+                    //<p> Vote : &nbsp; @post.Vote </p>
+                    <p>
+                        @post.UserName <br />
+                        Since : &nbsp; @post.UserCreatedDatetime.ToShortDateString()
+                    </p>
+                }
+                </Template>
             </TreeListColumn>
-            <TreeListColumn Field="PostTitle"
-                            Editable="true"
-                            Expandable="false"
-                            Width="150px" />
-            <TreeListColumn Field="PostBody"
-                            Editable="true"
-                            Expandable="false"
-                            Resizable="true"
-                            Width="320px" />
-            <TreeListColumn Field="CreatedDatetime"
-                            Editable="false"
-                            Expandable="false"
-                            Width="150px" />
-            <TreeListCommandColumn Width="220px">
+            <TreeListColumn
+                Field="PostTitle"
+                Editable="true"
+                Expandable="false"
+                Width="150px" />
+            <TreeListColumn
+                Field="PostBody"
+                Editable="true"
+                Expandable="false"
+                Resizable="true"
+                Width="320px">
+                <Template>@{
+                    PostModel post = context as PostModel;
+                    @post.PostBody <br />
+                        <br />
+                    <p> TvId : &nbsp; @post.PvId &nbsp;&nbsp; Vote : &nbsp; @post.Vote &nbsp;&nbsp; Inapprop : &nbsp; @post.IsInappropriate</p>
+                 }
+                </Template>
+
+            </TreeListColumn>
+            <TreeListColumn 
+                Field="CreatedDatetime"
+                Editable="false"
+                Expandable="false"
+                Width="150px" />
+            <TreeListCommandColumn 
+                Width="220px">
                 <TreeListCommandButton Command="Add" Icon="plus">Reply</TreeListCommandButton>
                 <TreeListCommandButton Command="Edit" Icon="edit">Edit</TreeListCommandButton>
                 <TreeListCommandButton Command="VoteUp" OnClick="OnVoteUp" Icon="check-circle">+1 Vote</TreeListCommandButton>
