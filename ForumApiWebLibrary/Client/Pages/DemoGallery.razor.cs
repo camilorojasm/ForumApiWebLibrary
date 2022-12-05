@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ForumApiWebLibrary.Client.Components
+namespace ForumApiWebLibrary.Client.Pages
 {
-    public partial class BlogsModerationListView : ComponentBase
+    public partial class DemoGallery : ComponentBase
     {
 
     }

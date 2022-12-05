@@ -5,6 +5,29 @@
 
 @attribute [Authorize]
 
+
+<TelerikStackLayout Orientation="StackLayoutOrientation.Vertical">
+
+<h3>Forum Group: &nbsp; @TopicsModel.ForumGroup</h3>
+    <hr class="solid">
+
+<h2>Forum Title: &nbsp; @TopicsModel.ForumTitle</h2>
+<h2>Forum Body: &nbsp; @TopicsModel.ForumTitleBody</h2>
+    <hr class="solid">
+
+    <table>
+        <tr>
+        <td><p># of Topics: @TopicsModel.TopicsCount</p></td>
+        <td><p>First Date: @TopicsModel.TopicsFirstDatetime.ToString()</p></td>
+        <td><p>Last Date: @TopicsModel.TopicsLastDatetime.ToString()</p></td>
+        </tr>
+        <tr>
+        <td><p># of Posts: @TopicsModel.PostsCount</p></td>
+        <td><p>First Date: @TopicsModel.PostsFirstDatetime.ToString()</p></td>
+        <td><p>Last Date: @TopicsModel.PostsLastDatetime.ToString()</p></td>
+        </tr>
+    </table>
+
 <TelerikListView @ref="TopicsModelListViewRef"
                  TItem="TopicModel"
                  OnRead="OnReadHandler"
@@ -27,10 +50,24 @@
     </EditTemplate>
     <Template Context="topic_context">
         <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
-            <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>
-            <p> TvId : &nbsp; @topic_context.TvId &nbsp;&nbsp; Vote : &nbsp; @topic_context.Vote &nbsp;&nbsp; Inapprop : &nbsp; @topic_context.IsInappropriate</p>
-            @*<p> Body  : &nbsp; @topic_context.TopicBody </p>*@
-            @*<p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p>*@
+            <TelerikStackLayout 
+                HorizontalAlign="@StackLayoutHorizontalAlign.Left"
+                Orientation="@StackLayoutOrientation.Horizontal" 
+                Spacing="10px"
+                Width="100%" 
+                Height="100%">
+                <div>
+                    <img src="@( $"larry200.jpg" )" /> <br />
+                    <p>
+                        @topic_context.UserName <br />
+                        Since : &nbsp; <strong>@topic_context.UserCreatedDatetime.ToShortDateString()</strong>
+                    </p>
+                </div>
+                <div>
+                    <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p> <br/>
+                    <p> TvId : &nbsp; @topic_context.TvId &nbsp;&nbsp; Vote : &nbsp; @topic_context.Vote &nbsp;&nbsp; Inapprop : &nbsp; @topic_context.IsInappropriate</p>
+                </div>
+            </TelerikStackLayout>
 
             <ListViewCommandButton OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
             <ListViewCommandButton OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
@@ -41,10 +78,9 @@
         </div>
     </Template>
     <HeaderTemplate>
-        <h4>@TopicsModel.ForumTitle</h4> <br />
-@*        <h4>Viewed by: &nbsp; @TopicsModel.UserProfiles.SingleOrDefault().UserName </h4> <br />*@
+@*        <h4>@TopicsModel.ForumTitle</h4> <br />*@
         <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
     </HeaderTemplate>
 </TelerikListView>
 
-
+</TelerikStackLayout>

@@ -8,13 +8,6 @@
 
 <PageTitle>Topics Page</PageTitle>
 
-@*@ActiveTabIndex.ToString()*@
-
-@*<h4>@TopicsModel.ForumTitle</h4>
-<br />
-<p> @TopicsModel.ForumTitleBody </p>
-<br />*@
-
 <CascadingValue Value="FId">
     <CascadingValue Value="ActiveTabIndex">
         <TelerikTabStrip ActiveTabIndex="ActiveTabIndex" ActiveTabIndexChanged="@TabChangedHandler">

@@ -9,10 +9,12 @@
 
 <TelerikStackLayout Orientation="StackLayoutOrientation.Vertical">
 
-    <h4>Forum Group: &nbsp; @PostsModel.ForumGroup</h4>
-    <h3>Forum Title: &nbsp; @PostsModel.ForumTitle</h3>
-    <h3>Forum Body: &nbsp; @PostsModel.ForumTitleBody</h3>
+    <h3>Forum Group: &nbsp; @PostsModel.ForumGroup</h3>
+    <hr class="solid">
 
+    <h2>Forum Title: &nbsp; @PostsModel.ForumTitle</h2>
+    <h2>Forum Body: &nbsp; @PostsModel.ForumTitleBody</h2>
+    <hr class="solid">
 
     <table>
         <tr>
@@ -26,55 +28,17 @@
             <td><p>Last Post Date: @PostsModel.ForumPostsLastDatetime.ToString()</p></td>
         </tr>
     </table>
+    <hr class="solid">
 
     <h3>Topic Title: &nbsp; @PostsModel.TopicTitle</h3>
     <h3>Topic Body: &nbsp; @PostsModel.TopicBody</h3>
+    <hr class="solid">
 
-    <TelerikEditor @ref="Editor"
-                   Tools="@ToolCollection"
-                   Height="650px"
-                   @bind-Value="@PostsModel.TopicBody">
-        <EditorCustomTools>
-            <EditorCustomTool Name="ColorTools">
-                <TelerikButtonGroup>
-                    <ButtonGroupButton OnClick="@ExecuteBackColor"
-                                       IconClass="k-i-background k-icon back-color"
-                                       Title="Back Color"></ButtonGroupButton>
-                    <ButtonGroupButton OnClick="@ExecuteForeColor"
-                                       IconClass="k-i-foreground-color k-icon fore-color"
-                                       Title="Fore Color"></ButtonGroupButton>
-                </TelerikButtonGroup>
-            </EditorCustomTool>
-            <EditorCustomTool Name="InsertVideo">
-                <TelerikButton OnClick="@ExecuteInsertVideo"
-                               Icon="video-external"
-                               Title="Insert Video"></TelerikButton>
-            </EditorCustomTool>
-            <EditorCustomTool Name="CleanFormattingTool">
-                <TelerikButton OnClick="@ExecuteCleanFormatting"
-                               Icon="clear-css"
-                               Title="Clean Formatting"></TelerikButton>
-            </EditorCustomTool>
-            <EditorCustomTool Name="InsertHtmlTools">
-                <TelerikButtonGroup>
-                    <ButtonGroupButton OnClick="@ExecuteInsertHr"
-                                       Icon="insert-down"
-                                       Title="Insert hr"></ButtonGroupButton>
-                    <ButtonGroupButton OnClick="@ExecuteInsertLogo"
-                                       Class="icon-size"
-                                       ImageUrl="https://demos.telerik.com/blazor-ui/images/component-icons/svg/editor.svg"
-                                       Title="Insert editor logo"></ButtonGroupButton>
-                </TelerikButtonGroup>
-            </EditorCustomTool>
-        </EditorCustomTools>
-    </TelerikEditor>
-
-    <br/>
     <h4>Created: @PostsModel.TopicCreatedDatetime.ToString()</h4>
     <p>Number of Posts: @PostsModel.TopicPostsCount</p>
     <p>Number of Up Votes: @PostsModel.TopicUpCount</p>
     <p>Number of Down Votes: @PostsModel.TopicDownCount</p>
-    <br />
+    <hr class="solid">
 
     <TelerikTreeList @ref="PostModelTreeListRef"
                      Data="PostsModel.RecentPostsList"
@@ -101,12 +65,9 @@
                 <Template>@{
                     PostModel post = context as PostModel;
                     <img src="@( $"larry200.jpg" )" /> <br />
-                    //<text>@post.ImageGuid</text> <br />
-                    //<p> PvId : &nbsp; @post.PvId </p> <br />
-                    //<p> Vote : &nbsp; @post.Vote </p>
                     <p>
                         @post.UserName <br />
-                        Since : &nbsp; @post.UserCreatedDatetime.ToShortDateString()
+                        Since : &nbsp; <strong>@post.UserCreatedDatetime.ToShortDateString()</strong>
                     </p>
                 }
                 </Template>
@@ -149,5 +110,51 @@
             </TreeListCommandColumn>
         </TreeListColumns>
     </TelerikTreeList>
+    <br />
+    <br />
+    <TelerikEditor @ref="Editor"
+                   Tools="@ToolCollection"
+                   Height="650px"
+                   @bind-Value="@PostsModel.TopicBody">
+        <EditorCustomTools>
+            <EditorCustomTool Name="ColorTools">
+                <TelerikButtonGroup>
+                    <ButtonGroupButton OnClick="@ExecuteBackColor"
+                                       IconClass="k-i-background k-icon back-color"
+                                       Title="Back Color"></ButtonGroupButton>
+                    <ButtonGroupButton OnClick="@ExecuteForeColor"
+                                       IconClass="k-i-foreground-color k-icon fore-color"
+                                       Title="Fore Color"></ButtonGroupButton>
+                </TelerikButtonGroup>
+            </EditorCustomTool>
+            <EditorCustomTool Name="InsertVideo">
+                <TelerikButton OnClick="@ExecuteInsertVideo"
+                               Icon="video-external"
+                               Title="Insert Video"></TelerikButton>
+            </EditorCustomTool>
+            <EditorCustomTool Name="CleanFormattingTool">
+                <TelerikButton OnClick="@ExecuteCleanFormatting"
+                               Icon="clear-css"
+                               Title="Clean Formatting"></TelerikButton>
+            </EditorCustomTool>
+            <EditorCustomTool Name="InsertHtmlTools">
+                <TelerikButtonGroup>
+                    <ButtonGroupButton OnClick="@ExecuteInsertHr"
+                                       Icon="insert-down"
+                                       Title="Insert hr"></ButtonGroupButton>
+                    <ButtonGroupButton OnClick="@ExecuteInsertLogo"
+                                       Class="icon-size"
+                                       ImageUrl="https://demos.telerik.com/blazor-ui/images/component-icons/svg/editor.svg"
+                                       Title="Insert editor logo"></ButtonGroupButton>
+                </TelerikButtonGroup>
+            </EditorCustomTool>
+        </EditorCustomTools>
+    </TelerikEditor>
 </TelerikStackLayout>
 
+
+<style>
+    hr.solid {
+        border-top: 3px solid #bbb;
+    }
+</style>
