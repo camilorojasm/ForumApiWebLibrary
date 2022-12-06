@@ -29,6 +29,18 @@ namespace ForumApiWebLibrary.Client.Components
         public int PageSize { get; set; } = 10;
         public int PageIndex { get; set; }
 
+        List<string> AllowedExtensions { get; set; } = new List<string>() { ".docx", ".pdf" };
+        int MaxFileSize { get; set; } = 1024 * 1024; // 1 MB
+
+        async Task OnSelectHandler(FileSelectEventArgs args)
+        {
+            foreach (var file in args.Files)
+            {
+                var buffer = new byte[file.Stream.Length];
+                await file.Stream.ReadAsync(buffer);
+            }
+        }
+
         //protected override async Task OnInitializedAsync()
         //{
         //    await FetchData();

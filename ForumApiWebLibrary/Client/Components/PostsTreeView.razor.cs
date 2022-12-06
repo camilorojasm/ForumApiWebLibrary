@@ -25,6 +25,18 @@ namespace ForumApiWebLibrary.Client.Components
 
         public TelerikTreeList<PostModel> PostModelTreeListRef;
 
+        List<string> AllowedExtensions { get; set; } = new List<string>() { ".docx", ".pdf" };
+        int MaxFileSize { get; set; } = 1024 * 1024; // 1 MB
+
+        async Task OnSelectHandler(FileSelectEventArgs args)
+        {
+            foreach (var file in args.Files)
+            {
+                var buffer = new byte[file.Stream.Length];
+                await file.Stream.ReadAsync(buffer);
+            }
+        }
+
         public TelerikEditor Editor { get; set; } = new TelerikEditor();
 
         public List<IEditorTool> ToolCollection { get; set; } = new List<IEditorTool>()

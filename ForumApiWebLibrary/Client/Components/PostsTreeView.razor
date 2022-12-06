@@ -107,6 +107,10 @@
                 <TreeListCommandButton Command="FlagAsInappropriate" OnClick="OnFlagAsInappropriate" Icon="x-circle">Flag Topic</TreeListCommandButton>
                 <TreeListCommandButton Command="Save" Icon="save" ShowInEdit="true">Update</TreeListCommandButton>
                 <TreeListCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">Cancel</TreeListCommandButton>
+                <TelerikFileSelect AllowedExtensions="AllowedExtensions"
+                                   MaxFileSize="MaxFileSize"
+                                   OnSelect="OnSelectHandler" />
+
             </TreeListCommandColumn>
         </TreeListColumns>
     </TelerikTreeList>

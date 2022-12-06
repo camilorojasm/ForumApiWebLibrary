@@ -8,79 +8,125 @@
 
 <TelerikStackLayout Orientation="StackLayoutOrientation.Vertical">
 
-<h3>Forum Group: &nbsp; @TopicsModel.ForumGroup</h3>
-    <hr class="solid">
+    <h3>Forum Group: &nbsp; @TopicsModel.ForumGroup</h3>
+        <hr class="solid">
 
-<h2>Forum Title: &nbsp; @TopicsModel.ForumTitle</h2>
-<h2>Forum Body: &nbsp; @TopicsModel.ForumTitleBody</h2>
-    <hr class="solid">
+    <h3>Forum Title: &nbsp; @TopicsModel.ForumTitle</h3>
+    <h3>Forum Body: &nbsp; @TopicsModel.ForumTitleBody</h3>
+        <hr class="solid">
 
     <table>
-        <tr>
-        <td><p># of Topics: @TopicsModel.TopicsCount</p></td>
-        <td><p>First Date: @TopicsModel.TopicsFirstDatetime.ToString()</p></td>
-        <td><p>Last Date: @TopicsModel.TopicsLastDatetime.ToString()</p></td>
-        </tr>
-        <tr>
-        <td><p># of Posts: @TopicsModel.PostsCount</p></td>
-        <td><p>First Date: @TopicsModel.PostsFirstDatetime.ToString()</p></td>
-        <td><p>Last Date: @TopicsModel.PostsLastDatetime.ToString()</p></td>
-        </tr>
-    </table>
+            <tr>
+            <td># of Topics : <strong>@TopicsModel.TopicsCount</strong></td>
+            <td>First Date : <strong>@TopicsModel.TopicsFirstDatetime.ToString()</strong></td>
+            <td>Last Date : <strong>@TopicsModel.TopicsLastDatetime.ToString()</strong></td>
+            </tr>
+            <tr>
+            <th colspan="3"><hr class="solid"></th>
+            </tr>
+            <tr>
+            <td># of Posts : <strong>@TopicsModel.PostsCount</strong></td>
+            <td>First Date : <strong>@TopicsModel.PostsFirstDatetime.ToString()</strong></td>
+            <td>Last Date : <strong>@TopicsModel.PostsLastDatetime.ToString()</strong></td>
+            </tr>
+        </table>
+        <hr class="solid">
 
-<TelerikListView @ref="TopicsModelListViewRef"
-                 TItem="TopicModel"
-                 OnRead="OnReadHandler"
-                 OnModelInit="OnModelInitHandler"
-                 OnCreate="CreateHandler"
-                 OnDelete="DeleteHandler"
-                 OnUpdate="UpdateHandler"
-                 OnEdit="EditHandler"
-                 PageChanged="PageChangedHandler"
-                 Pageable="true"
-                 PageSize="PageSize"
-                 Class="topics-list-view">
-    <EditTemplate>
-        <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
-            Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />
-            Body  : &nbsp; <TelerikTextBox @bind-Value="@context.TopicBody" /><br />
-            <ListViewCommandButton Command="Save" Icon="save">Save</ListViewCommandButton>
-            <ListViewCommandButton Command="Cancel" Icon="cancel">Cancel</ListViewCommandButton>
-        </div>
-    </EditTemplate>
-    <Template Context="topic_context">
-        <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
-            <TelerikStackLayout 
-                HorizontalAlign="@StackLayoutHorizontalAlign.Left"
-                Orientation="@StackLayoutOrientation.Horizontal" 
-                Spacing="10px"
-                Width="100%" 
-                Height="100%">
-                <div>
-                    <img src="@( $"larry200.jpg" )" /> <br />
-                    <p>
-                        @topic_context.UserName <br />
-                        Since : &nbsp; <strong>@topic_context.UserCreatedDatetime.ToShortDateString()</strong>
-                    </p>
-                </div>
-                <div>
-                    <p><a href="posts/@topic_context.TId">@topic_context.Title</a> -- @topic_context.TopicBody</p> <br/>
-                    <p> TvId : &nbsp; @topic_context.TvId &nbsp;&nbsp; Vote : &nbsp; @topic_context.Vote &nbsp;&nbsp; Inapprop : &nbsp; @topic_context.IsInappropriate</p>
-                </div>
-            </TelerikStackLayout>
+    <TelerikFileSelect AllowedExtensions="AllowedExtensions"
+                        MaxFileSize="MaxFileSize"
+                        OnSelect="OnSelectHandler" />
+    <br/>
+    <TelerikListView @ref="TopicsModelListViewRef"
+                     TItem="TopicModel"
+                     OnRead="OnReadHandler"
+                     OnModelInit="OnModelInitHandler"
+                     OnCreate="CreateHandler"
+                     OnDelete="DeleteHandler"
+                     OnUpdate="UpdateHandler"
+                     OnEdit="EditHandler"
+                     PageChanged="PageChangedHandler"
+                     Pageable="true"
+                     PageSize="PageSize"
+                     Class="topics-list-view">
+        <EditTemplate>
+            <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
+                Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />
+                Body  : &nbsp; <TelerikTextBox @bind-Value="@context.TopicBody" /><br />
+                <ListViewCommandButton Command="Save" Icon="save">Save</ListViewCommandButton>
+                <ListViewCommandButton Command="Cancel" Icon="cancel">Cancel</ListViewCommandButton>
+            </div>
+        </EditTemplate>
+        <Template Context="topic_context">
+            <div class="topics-listview-item" style="margin: 10px; padding: 10px;">
+                <TelerikStackLayout 
+                    HorizontalAlign="@StackLayoutHorizontalAlign.Left"
+                    Orientation="@StackLayoutOrientation.Horizontal" 
+                    Spacing="10px"
+                    Width="100%" 
+                    Height="100%">
+                    <div>
+                        <img src="@( $"larry200.jpg" )" /> <br />
+                        <p>
+                            @topic_context.UserName <br />
+                            Since : &nbsp; <strong>@topic_context.UserCreatedDatetime.ToShortDateString()</strong>
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            <a href="posts/@topic_context.TId">@topic_context.Title</a><br/>
+                            <TelerikTextArea @bind-Value="@topic_context.TopicBody"
+                                            Rounded="large"
+                                             Width="800px" /><br />
 
-            <ListViewCommandButton OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
-            <ListViewCommandButton OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
-            <ListViewCommandButton OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</ListViewCommandButton>
-            <ListViewCommandButton OnClick="OnFlag" Icon="x-circle">Flag Topic</ListViewCommandButton>
-            <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
-            <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
-        </div>
-    </Template>
-    <HeaderTemplate>
-@*        <h4>@TopicsModel.ForumTitle</h4> <br />*@
-        <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
-    </HeaderTemplate>
-</TelerikListView>
+                           @*TvId : &nbsp; @topic_context.TvId &nbsp;&nbsp; Vote : &nbsp; @topic_context.Vote &nbsp;&nbsp; Inapprop : &nbsp; @topic_context.IsInappropriate</p>*@
+                            <hr class="solid">
+                            <table style="width:100%">
+                            <tr>
+                                <td style="width:20%">Votes : <strong>@topic_context.TopicUpCount.ToString()/(@topic_context.TopicDownCount.ToString())</strong></td>
+                                <td style="width:40%">Created : <strong>@topic_context.CreatedDatetime.ToString()</strong></td>
+                                <td style="width:40%">Modified : <strong>@topic_context.EditedDatetime.ToString()</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Posts : <strong>@topic_context.TopicPostsCount.ToString()</strong></td>
+                                <td>First : <strong>@topic_context.PostsFirstDatetime.ToString()</strong></td>
+                                <td>Last : <strong>@topic_context.PostsLastDatetime.ToString()</strong></td>
+                            </tr>
+                            <tr>
+                                <td>TvId : <strong>@topic_context.TvId.ToString()</strong></td>
+                                <td>Vote : <strong>@topic_context.Vote.ToString()</strong></td>
+                                <td>Inapprop : <strong>@topic_context.IsInappropriate.ToString()</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Files : <strong>@topic_context.TopicFiles.FilesList.Count.ToString()</strong></td>
+                            </tr>
+                            </table>
+                        </p>
+
+                    </div>
+                </TelerikStackLayout>
+
+                <ListViewCommandButton OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
+                <ListViewCommandButton OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
+                <ListViewCommandButton OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</ListViewCommandButton>
+                <ListViewCommandButton OnClick="OnFlag" Icon="x-circle">Flag Topic</ListViewCommandButton>
+                <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+                <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
+                <TelerikFileSelect AllowedExtensions="AllowedExtensions"
+                                   MaxFileSize="MaxFileSize"
+                                   OnSelect="OnSelectHandler" />
+
+            </div>
+        </Template>
+        <HeaderTemplate>
+    @*        <h4>@TopicsModel.ForumTitle</h4> <br />*@
+            <ListViewCommandButton Command="Add" Icon="plus">Add New Topic</ListViewCommandButton> 
+        </HeaderTemplate>
+    </TelerikListView>
 
 </TelerikStackLayout>
+
+<style>
+    hr.solid {
+        border-top: 3px solid #bbb;
+    }
+</style>
