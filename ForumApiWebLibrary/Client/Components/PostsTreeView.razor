@@ -9,35 +9,75 @@
 
 <TelerikStackLayout Orientation="StackLayoutOrientation.Vertical">
 
-    <h3>Forum Group: &nbsp; @PostsModel.ForumGroup</h3>
+    <h3>Forum Group : @PostsModel.ForumGroup</h3>
     <hr class="solid">
 
-    <h2>Forum Title: &nbsp; @PostsModel.ForumTitle</h2>
-    <h2>Forum Body: &nbsp; @PostsModel.ForumTitleBody</h2>
+    <h3>Forum Title : @PostsModel.ForumTitle</h3>
+    <h3>Forum Body : <TelerikTextArea Value="@PostsModel.ForumTitleBody"
+                        Rounded="large"
+                        Enabled=false
+                        Width="800px" /></h3>
     <hr class="solid">
 
     <table>
         <tr>
-            <td><p>Number of Topics: @PostsModel.ForumTopicsCount</p></td>
-            <td><p>First Topic Date: @PostsModel.ForumTopicsFirstDatetime.ToString()</p></td>
-            <td><p>Last Topic Date: @PostsModel.ForumTopicsLastDatetime.ToString()</p></td>
+            <td># of Topics : <strong>@PostsModel.ForumTopicsCount.ToString()</strong></td>
+            <td>First Date : <strong>@PostsModel.ForumTopicsFirstDatetime.ToString()</strong></td>
+            <td>Last Date : <strong>@PostsModel.ForumTopicsLastDatetime.ToString()</strong></td>
         </tr>
         <tr>
-            <td><p>Number of Posts: @PostsModel.ForumPostsCount</p></td>
-            <td><p>First Post Date: @PostsModel.ForumPostsFirstDatetime.ToString()</p></td>
-            <td><p>Last Post Date: @PostsModel.ForumPostsLastDatetime.ToString()</p></td>
+            <th colspan="3"><hr class="solid"></th>
+        </tr>
+        <tr>
+            <td># of Posts : <strong>@PostsModel.ForumPostsCount.ToString()</strong></td>
+            <td>First Date : <strong>@PostsModel.ForumPostsFirstDatetime.ToString()</strong></td>
+            <td>Last Date : <strong>@PostsModel.ForumPostsLastDatetime.ToString()</strong></td>
         </tr>
     </table>
     <hr class="solid">
 
-    <h3>Topic Title: &nbsp; @PostsModel.TopicTitle</h3>
-    <h3>Topic Body: &nbsp; @PostsModel.TopicBody</h3>
-    <hr class="solid">
 
-    <h4>Created: @PostsModel.TopicCreatedDatetime.ToString()</h4>
-    <p>Number of Posts: @PostsModel.TopicPostsCount</p>
-    <p>Number of Up Votes: @PostsModel.TopicUpCount</p>
-    <p>Number of Down Votes: @PostsModel.TopicDownCount</p>
+    <TelerikStackLayout 
+        HorizontalAlign="@StackLayoutHorizontalAlign.Left"
+        Orientation="@StackLayoutOrientation.Horizontal" 
+        Spacing="10px"
+        Width="100%" 
+        Height="100%">
+        <div>
+            <img src="@( $"larry200.jpg" )" /> <br />
+            <p>
+                @PostsModel.UserName <br />
+                Since : &nbsp; <strong>@PostsModel.UserCreatedDatetime.ToShortDateString()</strong>
+            </p>
+        </div>
+        <div>
+            <p>
+                <h3>Topic Title : @PostsModel.TopicTitle</h3>
+                <h3>Topic Body : <TelerikTextArea Value="@PostsModel.TopicBody"
+                                                  Rounded="large"
+                                                  Enabled=false
+                                                  Width="800px" />
+                </h3>
+                <hr class="solid">
+
+                @*TvId : &nbsp; @topic_context.TvId &nbsp;&nbsp; Vote : &nbsp; @topic_context.Vote &nbsp;&nbsp; Inapprop : &nbsp; @topic_context.IsInappropriate</p>*@
+                <hr class="solid">
+                <table style="width:100%">
+                <tr>
+                        <td style="width:20%">Votes : <strong>@PostsModel.TopicUpCount.ToString()/(@PostsModel.TopicDownCount.ToString())</strong></td>
+                        <td style="width:40%">Created : <strong>@PostsModel.TopicCreatedDatetime.ToString()</strong></td>
+                    <td style="width:40%">Modified : <strong>@PostsModel.TopicEditedDatetime.ToString()</strong></td>
+                </tr>
+                <tr>
+                        <td>Posts : <strong>@PostsModel.TopicPostsCount.ToString()</strong></td>
+                        <td>First : <strong>@PostsModel.TopicPostsFirstDatetime.ToString()</strong></td>
+                        <td>Last : <strong>@PostsModel.TopicPostsLastDatetime.ToString()</strong></td>
+                </tr>
+                </table>
+            </p>
+
+        </div>
+    </TelerikStackLayout>
     <hr class="solid">
 
     <TelerikTreeList @ref="PostModelTreeListRef"
@@ -57,11 +97,12 @@
         </TreeListToolBar>
         <TreeListColumns>
             <TreeListColumn 
+                Title="Member"
                 Field="UserName"
                 Editable="false"
                 Expandable="true"
                 Resizable="true"
-                Width="250px" >
+                Width="200px" >
                 <Template>@{
                     PostModel post = context as PostModel;
                     <img src="@( $"larry200.jpg" )" /> <br />
@@ -73,40 +114,58 @@
                 </Template>
             </TreeListColumn>
             <TreeListColumn
+                Title="Title"
                 Field="PostTitle"
                 Editable="true"
                 Expandable="false"
-                Width="150px" />
+                Width="120px" />
             <TreeListColumn
+                Title="Body"
                 Field="PostBody"
                 Editable="true"
                 Expandable="false"
                 Resizable="true"
-                Width="320px">
+                Width="500px">
                 <Template>@{
                     PostModel post = context as PostModel;
                     @post.PostBody <br />
-                        <br />
-                    <p> TvId : &nbsp; @post.PvId &nbsp;&nbsp; Vote : &nbsp; @post.Vote &nbsp;&nbsp; Inapprop : &nbsp; @post.IsInappropriate</p>
+                    <hr class="solid">
+                    <table style="width:100%">
+                    <tr>
+                        <td style="width:20%">Votes : <strong>@post.PostUpCount.ToString()/(@post.PostDownCount.ToString())</strong></td>
+                        <td style="width:40%">Created : <strong>@post.CreatedDatetime.ToString()</strong></td>
+                        <td style="width:40%">Modified : <strong>@post.EditedDatetime.ToString()</strong></td>
+                    </tr>
+                    <tr>
+                        <td>PvId : <strong>@post.PvId.ToString()</strong></td>
+                        <td>Vote : <strong>@post.Vote.ToString()</strong></td>
+                        <td>Inapprop : <strong>@post.IsInappropriate.ToString()</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Files : <strong>@post.PostFiles.FilesList.Count.ToString()</strong></td>
+                    </tr>
+                    </table>    
+                    <br />
                  }
                 </Template>
 
             </TreeListColumn>
             <TreeListColumn 
+                Title="Created"
                 Field="CreatedDatetime"
                 Editable="false"
                 Expandable="false"
                 Width="150px" />
             <TreeListCommandColumn 
-                Width="220px">
-                <TreeListCommandButton Command="Add" Icon="plus">Reply</TreeListCommandButton>
-                <TreeListCommandButton Command="Edit" Icon="edit">Edit</TreeListCommandButton>
-                <TreeListCommandButton Command="VoteUp" OnClick="OnVoteUp" Icon="check-circle">+1 Vote</TreeListCommandButton>
-                <TreeListCommandButton Command="VoteDown" OnClick="OnVoteDown" Icon="check-outline">-1 Vote</TreeListCommandButton>
-                <TreeListCommandButton Command="VoteDelete" OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</TreeListCommandButton>
-                <TreeListCommandButton Command="FlagAsInappropriate" OnClick="OnFlagAsInappropriate" Icon="x-circle">Flag Topic</TreeListCommandButton>
-                <TreeListCommandButton Command="Save" Icon="save" ShowInEdit="true">Update</TreeListCommandButton>
-                <TreeListCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">Cancel</TreeListCommandButton>
+                Width="100px">
+                <TreeListCommandButton Size="Small" Command="Add" Icon="plus">Reply</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="Edit" Icon="edit">Edit</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="VoteUp" OnClick="OnVoteUp" Icon="check-circle">+1 Vote</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="VoteDown" OnClick="OnVoteDown" Icon="check-outline">-1 Vote</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="VoteDelete" OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="FlagAsInappropriate" OnClick="OnFlagAsInappropriate" Icon="x-circle">Flag Topic</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="Save" Icon="save" ShowInEdit="true">Update</TreeListCommandButton>
+                <TreeListCommandButton Size="Small" Command="Cancel" Icon="cancel" ShowInEdit="true">Cancel</TreeListCommandButton>
                 <TelerikFileSelect AllowedExtensions="AllowedExtensions"
                                    MaxFileSize="MaxFileSize"
                                    OnSelect="OnSelectHandler" />

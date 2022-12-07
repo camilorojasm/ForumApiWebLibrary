@@ -8,28 +8,32 @@
 
 <TelerikStackLayout Orientation="StackLayoutOrientation.Vertical">
 
-    <h3>Forum Group: &nbsp; @TopicsModel.ForumGroup</h3>
-        <hr class="solid">
+    <h3>Forum Group : @TopicsModel.ForumGroup</h3>
+    <hr class="solid">
 
-    <h3>Forum Title: &nbsp; @TopicsModel.ForumTitle</h3>
-    <h3>Forum Body: &nbsp; @TopicsModel.ForumTitleBody</h3>
-        <hr class="solid">
+    <h3>Forum Title : @TopicsModel.ForumTitle</h3>
+    <h3>Forum Body :  <TelerikTextArea Value="@TopicsModel.ForumTitleBody"
+                        Rounded="large"
+                        Enabled=false
+                        Width="800px" /><br />
+    </h3>
+    <hr class="solid">
 
     <table>
-            <tr>
-            <td># of Topics : <strong>@TopicsModel.TopicsCount</strong></td>
+        <tr>
+            <td># of Topics : <strong>@TopicsModel.TopicsCount.ToString()</strong></td>
             <td>First Date : <strong>@TopicsModel.TopicsFirstDatetime.ToString()</strong></td>
             <td>Last Date : <strong>@TopicsModel.TopicsLastDatetime.ToString()</strong></td>
-            </tr>
-            <tr>
+        </tr>
+        <tr>
             <th colspan="3"><hr class="solid"></th>
-            </tr>
-            <tr>
-            <td># of Posts : <strong>@TopicsModel.PostsCount</strong></td>
+        </tr>
+        <tr>
+            <td># of Posts : <strong>@TopicsModel.PostsCount.ToString()</strong></td>
             <td>First Date : <strong>@TopicsModel.PostsFirstDatetime.ToString()</strong></td>
             <td>Last Date : <strong>@TopicsModel.PostsLastDatetime.ToString()</strong></td>
-            </tr>
-        </table>
+        </tr>
+    </table>
         <hr class="solid">
 
     <TelerikFileSelect AllowedExtensions="AllowedExtensions"
@@ -52,8 +56,8 @@
             <div style="border: 1px solid green; margin: 10px; padding: 10px; display: inline-block;">
                 Title : &nbsp; <TelerikTextBox @bind-Value="@context.Title" /><br />
                 Body  : &nbsp; <TelerikTextBox @bind-Value="@context.TopicBody" /><br />
-                <ListViewCommandButton Command="Save" Icon="save">Save</ListViewCommandButton>
-                <ListViewCommandButton Command="Cancel" Icon="cancel">Cancel</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" Command="Save" Icon="save">Save</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" Command="Cancel" Icon="cancel">Cancel</ListViewCommandButton>
             </div>
         </EditTemplate>
         <Template Context="topic_context">
@@ -105,12 +109,12 @@
                     </div>
                 </TelerikStackLayout>
 
-                <ListViewCommandButton OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
-                <ListViewCommandButton OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
-                <ListViewCommandButton OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</ListViewCommandButton>
-                <ListViewCommandButton OnClick="OnFlag" Icon="x-circle">Flag Topic</ListViewCommandButton>
-                <ListViewCommandButton Command="Edit" Icon="edit">Edit</ListViewCommandButton>
-                <ListViewCommandButton Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" OnClick="OnVoteUp" Icon="check-circle">+1 Vote</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" OnClick="OnVoteDown" Icon="check-outline">-1 Vote</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" OnClick="OnVoteDelete" Icon="x-outline">Delete Vote</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" OnClick="OnFlag" Icon="x-circle">Flag Topic</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" Command="Edit" Icon="edit">Edit</ListViewCommandButton>
+                <ListViewCommandButton Size="Small" Enabled="false" Command="Reply" OnClick="ReplyHandler" Icon="plus">Reply</ListViewCommandButton>
                 <TelerikFileSelect AllowedExtensions="AllowedExtensions"
                                    MaxFileSize="MaxFileSize"
                                    OnSelect="OnSelectHandler" />

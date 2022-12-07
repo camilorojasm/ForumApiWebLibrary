@@ -9,5 +9,17 @@
 <PageTitle>Posts Page</PageTitle>
 
 <CascadingValue Value="TId">
-    <PostsTreeView />
+    <CascadingValue Value="ActiveTabIndex">
+        <TelerikTabStrip ActiveTabIndex="ActiveTabIndex" ActiveTabIndexChanged="@TabChangedHandler">
+            <TabStripTab Title="Tree">
+                <PostsTreeView />
+            </TabStripTab>
+            <TabStripTab Title="Grid">
+                <p>Coming Soon</p>
+            </TabStripTab>
+            <TabStripTab Title="List">
+                <p>Coming Soon</p>
+            </TabStripTab>
+        </TelerikTabStrip>
+    </CascadingValue>
 </CascadingValue>
