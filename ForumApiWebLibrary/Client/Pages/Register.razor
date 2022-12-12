@@ -1,4 +1,9 @@
 ﻿@page "/register"
+@inject IForumApiClient ForumApiClient
+@inject ILogger<RegistrationModel> Logger
+@inject IForumAuthenticationService ForumAuthService
+@inject NavigationManager NavManager
+
 @layout MainLayout
 
 <PageTitle>Registration Page</PageTitle>

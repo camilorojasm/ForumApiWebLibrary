@@ -1,6 +1,66 @@
 ﻿@page "/profile"
+@inject IForumApiClient ForumApiClient
+@inject ILogger<UserProfileModel> Logger
+@inject IForumAuthenticationService ForumAuthService
+@inject NavigationManager NavManager
+
+@attribute [Authorize]
+
 @layout MainLayout
 
 <PageTitle>Pofile Page</PageTitle>
 
-Account profile and settings
+<div class="demo-section">
+    @if (ValidSubmit)
+    {
+        <div class="demo-alert demo-alert-success" role="alert">
+            The form was submitted successfully.
+        </div>
+    }
+    else
+    {
+        <TelerikForm Model="ProfileModel"
+                 OnValidSubmit="HandleValidSubmit"
+                 OnInvalidSubmit="HandleInvalidSubmit">
+            <FormValidation>
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+            </FormValidation>
+            <FormItems>
+                <FormGroup LabelText="Profile Photograph">
+                    <img src="@( $"larry200.jpg" )" /><br />
+                    Please upload a 200x200 pixel photograph<br />
+                    <TelerikFileSelect AllowedExtensions="AllowedExtensions"
+                                   MaxFileSize="MaxFileSize"
+                                   OnSelect="OnSelectHandler" />
+
+                </FormGroup>
+                <FormGroup LabelText="Personal Information">
+                    <FormItem Field="@nameof(ProfileModel.UserName)">
+                        <Template>
+                            <label for="username" class="k-label k-form-label">User Name:</label>
+                            <TelerikTextBox Id="mail" @bind-Value="@ProfileModel.UserName" InputMode="text" PlaceHolder="Username"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => ProfileModel.UserName)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                    <FormItem Field="@nameof(ProfileModel.EmailAddress)">
+                        <Template>
+                            <label for="mail" class="k-label k-form-label">Email:</label>
+                            <TelerikTextBox Id="mail" @bind-Value="@ProfileModel.EmailAddress" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => ProfileModel.EmailAddress)"></TelerikValidationMessage>
+                        </Template>
+                    </FormItem>
+                </FormGroup>
+                <FormGroup LabelText="Password Reset">
+                    Please click this link to request a password reset email
+                </FormGroup>
+                <FormGroup LabelText="Partnership Account Management">
+                    Please click this link to manage your partnership account
+                </FormGroup>
+                <FormGroup LabelText="Contact Preferences">
+                    <FormItem Field="@nameof(ProfileModel.OptinInternal)" />
+                    <FormItem Field="@nameof(ProfileModel.OptinExternal)" />
+                </FormGroup>
+            </FormItems>
+        </TelerikForm>
+    }
+</div>
