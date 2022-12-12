@@ -23,7 +23,7 @@ jobs:
           include-prerelease: true
           
       - name: Restore NuGet Packages
-        run: dotnet restore ForumApiWebLibrary\Client\ForumApiWebLibrary.Client.csproj --configfile ForumApiWebLibrary\NuGet.Config --runtime any
+        run: dotnet restore ForumApiWebLibrary\Client\ForumApiWebLibrary.Client.csproj --configfile NuGet.Config --runtime any
         env:
           TELERIK_USERNAME: ${{ secrets.MyTelerikAccountUsername }}
           TELERIK_PASSWORD: ${{ secrets.MyTelerikAccountPassword }}
