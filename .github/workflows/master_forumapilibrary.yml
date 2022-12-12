@@ -21,7 +21,10 @@ jobs:
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
-          
+      
+      - name: Make new Nuget.config file
+        run: dotnet new nugetconfig
+        
       - name: Restore NuGet Packages
         run: dotnet restore ForumApiWebLibrary\Client\ForumApiWebLibrary.Client.csproj --configfile NuGet.Config --runtime any
         env:
