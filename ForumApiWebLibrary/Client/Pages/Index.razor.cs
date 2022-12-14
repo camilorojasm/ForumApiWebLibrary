@@ -5,12 +5,12 @@ namespace ForumApiWebLibrary.Client.Pages
 {
     public partial class Index
     {
-        MarkupString helloString;
+        MarkupString demoString;
 
-        void SayHelloHandler()
+        void DemoHandler()
         {
-            string msg = string.Format("Hello from <strong>Telerik Blazor</strong> at {0}.<br /> Forum API", DateTime.Now);
-            helloString = new MarkupString(msg);
+            string msg = string.Format("Forum API demonstration web application using <strong>Telerik Blazor</strong> at {0}.<br /> components", DateTime.Now);
+            demoString = new MarkupString(msg);
         }
 
     }
