@@ -1,84 +1,104 @@
-﻿@page "/login"
+﻿@page "/"
 @using System.ComponentModel.DataAnnotations
 @using System.ComponentModel
-@inject IForumAuthenticationService ForumAuthService 
+@inject IForumAuthenticationService ForumAuthService
 @inject NavigationManager NavManager
 
 @if (showAuthenticationError)
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@authenticationErrorText</p>
-    </div>
+	<div class="alert alert-danger" role="alert">
+		<p>@authenticationErrorText</p>
+	</div>
 }
 
 <AuthorizeView>
-    <NotAuthorized>
-        <h3>Login</h3>
-        <br />
+	<NotAuthorized>
+		<div class="text-center">
+			<EditForm class="form-signin" Context="NotAuthorized" Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
+			<DataAnnotationsValidator />
 
-        <EditForm Context="NotAuthorized" Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
-            <DataAnnotationsValidator />
+			<img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			
+			<div class="box-content" style="margin: auto;">
+				<div class="form-group">
+					<label for="mail" class="k-label k-form-label">Email*:</label>
+					<TelerikTextBox @bind-Value="@loginModel.Email"></TelerikTextBox>
+					<ValidationMessage For="@(()=> loginModel.Email)" />
 
-            <div class="form-group">
-                <h5>Email Address</h5>
-                <InputText @bind-Value="@loginModel.Email"></InputText>
-                <ValidationMessage For="@(()=> loginModel.Email)" />
-    
-                <h5>Password</h5>
-                <InputText type="password" @bind-Value="@loginModel.Password"></InputText>
-                <ValidationMessage For="@(()=> loginModel.Password)" />
-            </div>
+					<label for="inputEmail" class="sr-only">Password</label>
+					<InputText type="password" @bind-Value="@loginModel.Password"></InputText>
+					<ValidationMessage For="@(()=> loginModel.Password)" />
+				</div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Login</button>
-            </div>
-        </EditForm>
-    </NotAuthorized>
-    <Authorized>
-        <h3>Logout</h3>
-        <br />
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">Login</button>
+				</div>
+				<br/>
+				<a href="register">Register for a new account here</a>
+			</div>
+		</EditForm>
+		</div>
+	</NotAuthorized>
+	<Authorized>
+		<h3>Logout</h3>
+		<br />
 
-        <EditForm Context="Authorized" Model="@loginModel" OnSubmit="@HandleValidLogoutSubmit">
+		<EditForm Context="Authorized" Model="@loginModel" OnSubmit="@HandleValidLogoutSubmit">
 
-            <div class="form-group">
-            <button type="submit" class="btn btn-outline-primary">Logout</button>
-            </div>
-        </EditForm>
-    </Authorized>
+			<div class="form-group">
+				<button type="submit" class="btn btn-outline-primary">Logout</button>
+			</div>
+		</EditForm>
+	</Authorized>
 </AuthorizeView>
 
-<br />
-<a href="register">Register for a new account here</a>
+
 
 @code {
 
-    private LoginModel loginModel = new LoginModel();
+	private LoginModel loginModel = new LoginModel();
 
-    private bool showAuthenticationError = false;
-    private string authenticationErrorText = string.Empty;
+	private bool showAuthenticationError = false;
+	private string authenticationErrorText = string.Empty;
 
+	[CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
 
-    private async Task HandleValidSubmit()
+    //[Parameter]
+    public UserProfileModel ProfileModel { get; set; } = new UserProfileModel();
+
+    protected override async Task OnInitializedAsync()
     {
-        var result = await ForumAuthService.Login(loginModel);
+        var authState = await AuthenticationState;
 
-        loginModel.Password = string.Empty;
-
-        if (result is not null)
+        if (authState.User.Identity.IsAuthenticated)
         {
-            NavManager.NavigateTo("/verify");
-        }
-        else
-        {
-            showAuthenticationError = true;
-            authenticationErrorText = "Login failed to process successfully.  Please refresh your browswer and try again.";
+			NavManager.NavigateTo("/verify");
         }
     }
 
-    private async Task HandleValidLogoutSubmit()
-    {
-        await ForumAuthService.Logout();
-        NavManager.NavigateTo("/login");
-        //NavManager.NavigateTo("/login", forceLoad: true);
-    }
+	private async Task HandleValidSubmit()
+	{
+		var result = await ForumAuthService.Login(loginModel);
+
+		loginModel.Password = string.Empty;
+
+		if (result is not null)
+		{
+			NavManager.NavigateTo("/verify");
+		}
+		else
+		{
+			showAuthenticationError = true;
+			authenticationErrorText = "Login failed to process successfully.  Please refresh your browswer and try again.";
+		}
+	}
+
+	private async Task HandleValidLogoutSubmit()
+	{
+		await ForumAuthService.Logout();
+		NavManager.NavigateTo("/login");
+		//NavManager.NavigateTo("/login", forceLoad: true);
+	}
 }

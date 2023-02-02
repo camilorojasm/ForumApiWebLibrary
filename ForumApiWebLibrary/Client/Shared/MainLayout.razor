@@ -1,17 +1,64 @@
 ﻿@layout TelerikLayout
-
+@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel
+@inject IForumAuthenticationService ForumAuthService
+@inject NavigationManager NavManager
+@using System.Security.Claims
+@inject IForumApiClient ForumApiClient
 @inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
-
+@if (@isAuthenticated)
+{
+	<div class="sidebar">
+		<NavMenu />
+	</div>
+}
+	@if (@isAuthenticated)
+	{
 <div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">C#/SQL Code</a>
-    </div>
-
-    <div class="content px-4">
-        @Body
-    </div>
+		<EditForm Context="Authorized" Model="@loginModel" OnSubmit="@HandleValidLogoutSubmit">
+			<div class="form-group">
+				<button type="submit" class="btn btn-outline-primary">Logout</button>
+			</div>
+		</EditForm>
+		<div class="content px-4">
+			@Body
+		</div>
 </div>
+	} 
+	else {
+		@Body
+	}
+	
+
+@code {
+
+	private LoginModel loginModel = new LoginModel();
+
+	[CascadingParameter]
+	public Task<AuthenticationState> AuthenticationState { get; set; }
+
+	private bool isAuthenticated = false;
+
+	//[Parameter]
+	public UserProfileModel ProfileModel { get; set; } = new UserProfileModel();
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await AuthenticationState;
+
+		if (authState.User.Identity.IsAuthenticated)
+		{
+			isAuthenticated = true;
+			ProfileModel = await ForumApiClient.GetUserProfileViewAsync();
+		}
+	}
+
+	private async Task HandleValidLogoutSubmit()
+	{
+		await ForumAuthService.Logout();
+		NavManager.NavigateTo("/login");
+		//NavManager.NavigateTo("/login", forceLoad: true);
+	}
+
+}
